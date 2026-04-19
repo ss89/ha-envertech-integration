@@ -9,8 +9,8 @@ DEFAULT_NAME = "OpenEVT"
 # Polling interval in seconds
 UPDATE_INTERVAL = 5
 
-# Supervisor API
-SUPERVISOR_ADDON_SLUG = "openevt"
+# Supervisor API — try all known slug variants
+SUPERVISOR_ADDON_SLUGS = ["openevt", "fe3706e6_openevt"]
 SUPERVISOR_ADDON_PORT = 9090
 
 # Device identifiers

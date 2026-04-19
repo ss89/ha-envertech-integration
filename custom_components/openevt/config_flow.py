@@ -43,6 +43,17 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
             addon_info = await check_supervisor_addon(self.hass)
             if addon_info:
                 return await self._async_create_entry_from_addon(addon_info)
+            # Auto-discovery failed — show manual form as fallback
+            # (supervisor may not be available on HA Core)
+            return self._show_manual_form()
+
+        return self._async_create_entry_from_manual(user_input)
+
+    async def async_step_manual(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle manual configuration (shown after auto-discovery fails)."""
+        if user_input is None:
             return self._show_manual_form()
 
         return self._async_create_entry_from_manual(user_input)

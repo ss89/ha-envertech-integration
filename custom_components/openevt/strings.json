@@ -1,9 +1,10 @@
+"""The OpenEVT integration."""
 {
   "config": {
     "step": {
       "user": {
         "title": "Configure OpenEVT",
-        "description": "Enter the inverter endpoint URL(s) and serial number(s). For multiple inverters, separate values with semicolons (`;`).",
+        "description": "Auto-detection of the OpenEVT addon failed. Enter the inverter endpoint URL(s) and serial number(s) manually. For multiple inverters, separate values with semicolons (`;`).",
         "data": {
           "url": "Inverter Endpoint URL(s)",
           "serial_numbers": "Serial Number(s)"
@@ -34,9 +35,9 @@
     },
     "abort": {
       "already_configured": "Inverter is already configured.",
-      "no_supervisor": "Home Assistant Supervisor is not available. Please configure manually.",
-      "addon_not_found": "OpenEVT Supervisor add-on not found.",
-      "addon_not_started": "OpenEVT Supervisor add-on is not running."
+      "no_supervisor": "Home Assistant Supervisor is not available. This integration requires HA OS or HA Container. If you are running HA Core, you must configure the URL and serial numbers manually.",
+      "addon_not_found": "OpenEVT Supervisor add-on not found. Ensure the OpenEVT addon is installed in Home Assistant Supervisor.",
+      "addon_not_started": "OpenEVT Supervisor add-on is not running. Start the addon and try again."
     }
   },
   "entity": {

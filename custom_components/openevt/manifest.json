@@ -7,7 +7,7 @@
   "documentation": "https://github.com/brandon1024/openevt",
   "issue_tracker": "https://github.com/brandon1024/openevt/issues",
   "codeowners": ["@ss89"],
-  "dependencies": [],
+  "dependencies": ["hassio"],
   "config_flow": true,
   "single_config_entry": true
 }

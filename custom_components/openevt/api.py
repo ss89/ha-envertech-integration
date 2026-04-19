@@ -11,15 +11,19 @@ from aiohttp import ClientSession, ClientTimeout
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import SUPERVISOR_ADDON_SLUG, SUPERVISOR_ADDON_PORT
+from .const import SUPERVISOR_ADDON_PORT, SUPERVISOR_ADDON_SLUGS
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def check_supervisor_addon(hass: HomeAssistant) -> dict[str, Any] | None:
+async def check_supervisor_addon(
+    hass: HomeAssistant,
+) -> dict[str, Any] | None:
     """Check if the OpenEVT Supervisor add-on is installed and running.
 
-    Returns addon info dict with hostname, options, state, or None if not available.
+    Returns addon info dict with hostname, options, state on success,
+    or None if the addon is not available.
+    On failure, logs the specific reason at DEBUG level.
     """
     api_host = os.environ.get("SUPERVISOR", "http://supervisor")
     token = os.environ.get("SUPERVISOR_TOKEN", "")
@@ -31,42 +35,60 @@ async def check_supervisor_addon(hass: HomeAssistant) -> dict[str, Any] | None:
     session = async_get_clientsession(hass)
     timeout = ClientTimeout(total=5)
 
-    try:
-        url = f"{api_host}/addons/{SUPERVISOR_ADDON_SLUG}/info"
-        headers = {"Authorization": f"Bearer {token}"}
+    # Try each known slug variant in order
+    for slug in SUPERVISOR_ADDON_SLUGS:
+        try:
+            url = f"{api_host}/addons/{slug}/info"
+            headers = {"Authorization": f"Bearer {token}"}
 
-        async with session.get(url, headers=headers, timeout=timeout) as resp:
-            if resp.status != 200:
-                _LOGGER.debug(
-                    "Addon %s not found (status %d)", SUPERVISOR_ADDON_SLUG, resp.status
-                )
-                return None
-            data = await resp.json()
-    except Exception as exc:  # noqa: BLE001
-        _LOGGER.debug("Failed to check addon %s: %s", SUPERVISOR_ADDON_SLUG, exc)
-        return None
+            async with session.get(url, headers=headers, timeout=timeout) as resp:
+                if resp.status != 200:
+                    _LOGGER.debug(
+                        "Addon %s not found (status %d). "
+                        "If your addon slug differs, update SUPERVISOR_ADDON_SLUGS.",
+                        slug,
+                        resp.status,
+                    )
+                    continue
+                data = await resp.json()
+        except Exception as exc:  # noqa: BLE001
+            _LOGGER.debug(
+                "Failed to check addon %s: %s. "
+                "Ensure HA OS/Container is used and the addon is installed.",
+                slug,
+                exc,
+            )
+            continue
 
-    # Handle both old and new Supervisor API response formats
-    addon = data.get("data") or data
+        # Handle both old and new Supervisor API response formats
+        addon = data.get("data") or data
 
-    state = addon.get("state")
-    hostname = addon.get("hostname")
-    options = addon.get("options", {})
+        state = addon.get("state")
+        hostname = addon.get("hostname")
+        options = addon.get("options", {})
 
-    if state != "started" or not hostname:
-        _LOGGER.debug(
-            "Addon %s not ready (state=%s, hostname=%s)",
-            SUPERVISOR_ADDON_SLUG,
-            state,
-            hostname,
-        )
-        return None
+        if state != "started" or not hostname:
+            _LOGGER.debug(
+                "Addon %s not ready (state=%s, hostname=%s). "
+                "Ensure the addon is running.",
+                slug,
+                state,
+                hostname,
+            )
+            continue
 
-    return {
-        "hostname": hostname,
-        "options": options,
-        "state": state,
-    }
+        return {
+            "hostname": hostname,
+            "options": options,
+            "state": state,
+        }
+
+    _LOGGER.debug(
+        "OpenEVT addon not found with any known slug (%s). "
+        "Check the addon slug in HA Supervisor settings.",
+        SUPERVISOR_ADDON_SLUGS,
+    )
+    return None
 
 
 async def fetch_inverter_status(hass: HomeAssistant, url: str) -> dict[str, Any] | None:
