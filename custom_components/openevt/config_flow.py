@@ -82,7 +82,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
 
         title_parts = []
         for sn in serial_numbers:
-            if sn and sn != f"inverter-{serial_numbers.index(sn)+1}":
+            if sn and not sn.startswith("inverter-"):
                 title_parts.append(sn)
         title = f"{DEFAULT_NAME}" + (f" ({', '.join(title_parts)})" if title_parts else "")
 
@@ -120,7 +120,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         self._urls = urls
         self._serial_numbers = serial_numbers
 
-        title_parts = [sn for sn in serial_numbers if sn]
+        title_parts = [sn for sn in serial_numbers if sn and not sn.startswith("inverter-")]
         title = f"{DEFAULT_NAME}" + (f" ({', '.join(title_parts)})" if title_parts else DEFAULT_NAME)
 
         await self.async_set_unique_id(serial_numbers[0])
@@ -169,7 +169,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         while len(serial_numbers) < len(urls):
             serial_numbers.append(f"inverter-{len(serial_numbers)+1}")
 
-        title_parts = [sn for sn in serial_numbers if sn]
+        title_parts = [sn for sn in serial_numbers if sn and not sn.startswith("inverter-")]
         title = f"{DEFAULT_NAME}" + (f" ({', '.join(title_parts)})" if title_parts else DEFAULT_NAME)
 
         return self.async_update_reload_and_abort(

@@ -29,7 +29,7 @@ async def check_supervisor_addon(hass: HomeAssistant) -> dict[str, Any] | None:
         return None
 
     session = async_get_clientsession(hass)
-    timeout = ClientTimeout(total=10)
+    timeout = ClientTimeout(total=5)
 
     try:
         url = f"{api_host}/addons/{SUPERVISOR_ADDON_SLUG}/info"
@@ -37,20 +37,29 @@ async def check_supervisor_addon(hass: HomeAssistant) -> dict[str, Any] | None:
 
         async with session.get(url, headers=headers, timeout=timeout) as resp:
             if resp.status != 200:
-                _LOGGER.debug("Addon %s not found (status %d)", SUPERVISOR_ADDON_SLUG, resp.status)
+                _LOGGER.debug(
+                    "Addon %s not found (status %d)", SUPERVISOR_ADDON_SLUG, resp.status
+                )
                 return None
             data = await resp.json()
     except Exception as exc:  # noqa: BLE001
         _LOGGER.debug("Failed to check addon %s: %s", SUPERVISOR_ADDON_SLUG, exc)
         return None
 
-    addon = data.get("data", {})
+    # Handle both old and new Supervisor API response formats
+    addon = data.get("data") or data
+
     state = addon.get("state")
     hostname = addon.get("hostname")
     options = addon.get("options", {})
 
     if state != "started" or not hostname:
-        _LOGGER.debug("Addon %s not ready (state=%s, hostname=%s)", SUPERVISOR_ADDON_SLUG, state, hostname)
+        _LOGGER.debug(
+            "Addon %s not ready (state=%s, hostname=%s)",
+            SUPERVISOR_ADDON_SLUG,
+            state,
+            hostname,
+        )
         return None
 
     return {
