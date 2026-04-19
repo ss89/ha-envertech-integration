@@ -1,0 +1,77 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure OpenEVT",
+        "description": "Enter the inverter endpoint URL(s) and serial number(s). For multiple inverters, separate values with semicolons (`;`).",
+        "data": {
+          "url": "Inverter Endpoint URL(s)",
+          "serial_numbers": "Serial Number(s)"
+        },
+        "data_description": {
+          "url": "HTTP URL to the /inverter endpoint (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons.",
+          "serial_numbers": "Inverter serial number(s). One per inverter, separated by semicolons."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure OpenEVT",
+        "description": "Update the inverter endpoint URL(s) and serial number(s). For multiple inverters, separate values with semicolons (`;`).",
+        "data": {
+          "url": "Inverter Endpoint URL(s)",
+          "serial_numbers": "Serial Number(s)"
+        },
+        "data_description": {
+          "url": "HTTP URL to the /inverter endpoint (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons.",
+          "serial_numbers": "Inverter serial number(s). One per inverter, separated by semicolons."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL cannot be empty.",
+      "empty_serial": "Serial number cannot be empty.",
+      "cannot_connect": "Cannot connect to the inverter.",
+      "invalid_data": "Invalid data received from inverter."
+    },
+    "abort": {
+      "already_configured": "Inverter is already configured.",
+      "no_supervisor": "Home Assistant Supervisor is not available. Please configure manually.",
+      "addon_not_found": "OpenEVT Supervisor add-on not found.",
+      "addon_not_started": "OpenEVT Supervisor add-on is not running."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "DC Voltage"
+      },
+      "ac_voltage": {
+        "name": "AC Voltage"
+      },
+      "power": {
+        "name": "Power"
+      },
+      "frequency": {
+        "name": "Frequency"
+      },
+      "total_energy": {
+        "name": "Energy (Total)"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "module_id": {
+        "name": "Module ID"
+      },
+      "firmware_version": {
+        "name": "Firmware Version"
+      },
+      "connection_status": {
+        "name": "Connection Status"
+      },
+      "inverter_id": {
+        "name": "Inverter ID"
+      }
+    }
+  },
+  "options": {}
+}

@@ -1,0 +1,15 @@
+{
+  "domain": "openevt",
+  "name": "OpenEVT",
+  "version": "1.0.0",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "documentation": "https://github.com/brandon1024/openevt",
+  "issue_tracker": "https://github.com/brandon1024/openevt/issues",
+  "codeowners": ["@ss89"],
+  "dependencies": [],
+  "after_dependencies": ["hassio"],
+  "requirements": ["aiohasupervisor>=0.4.3"],
+  "config_flow": true,
+  "single_config_entry": true
+}

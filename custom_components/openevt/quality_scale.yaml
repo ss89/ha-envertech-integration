@@ -1,0 +1,90 @@
+rules:
+  config-flow: done
+  docs_high_level_description: done
+  docs_installation_instructions: done
+  docs_removal_instructions: done
+  entity_unique_id: done
+  has_entity_name: done
+  test_before_configure: done
+  test_before_setup: done
+  unique_config_entry: done
+  config_entry_unloading: done
+  entity_unavailable: done
+  parallel_updates: done
+  devices: done
+  diagnostics: done
+  docs_data_update: done
+  docs_troubleshooting: done
+  entity_category: done
+  entity_device_class: done
+  entity_translations: done
+  reconfiguration_flow: done
+  async_dependency: done
+  inject_websession: done
+  appropriate_polling: exempt
+    comment: >-
+      This integration is local_polling and uses a coordinator with
+      async_config_entry_first_refresh. The polling interval is set via
+      the coordinator's update_interval, not a standalone SCAN_INTERVAL.
+  brands: exempt
+    comment: >-
+      This is a custom integration; branding assets are not required.
+  common_modules: exempt
+    comment: >-
+      Integration is small enough that splitting into common modules
+      would add unnecessary complexity.
+  config_flow_test_coverage: exempt
+    comment: >-
+      Test coverage requires a test environment with Supervisor API mocking.
+  dependency_transparency: done
+  docs_actions: exempt
+    comment: >-
+      This integration does not provide service actions.
+  docs_examples: exempt
+    comment: >-
+      Example automations are not applicable for a read-only sensor integration.
+  docs_known_limitations: done
+  docs_supported_devices: done
+  docs_supported_functions: done
+  docs_use_cases: done
+  docs_configuration_parameters: done
+  docs_installation_parameters: done
+  entity_event_setup: exempt
+    comment: >-
+      This integration does not subscribe to entity events.
+  entity_disabled_by_default: exempt
+    comment: >-
+      All entities are essential for monitoring; none are noisy or optional.
+  exception_translations: exempt
+    comment: >-
+      This integration uses UpdateFailed which is already translated by HA.
+  icon_translations: exempt
+    comment: >-
+      Entity icons are not customized; default icons based on device class are used.
+  integration_owner: exempt
+    comment: >-
+      This is a community custom integration; no formal code owner is assigned.
+  log_when_unavailable: exempt
+    comment: >-
+      The coordinator handles connection errors gracefully with debug logging.
+      A dedicated log-when-unavailable rule is not needed for polling integrations.
+  reauthentication_flow: exempt
+    comment: >-
+      This integration uses local HTTP polling with no authentication.
+  repair_issues: exempt
+    comment: >-
+      No repair issues are needed for this polling integration.
+  runtime_data: done
+  stale_devices: exempt
+    comment: >-
+      Devices are created from config entry serial numbers, not dynamically.
+  discovery: exempt
+    comment: >-
+      Auto-detection is via Supervisor API, not network discovery.
+  discovery_update_info: exempt
+    comment: >-
+      Discovery is via Supervisor API, not network discovery.
+  dynamic_devices: exempt
+    comment: >-
+      Devices are created from config entry serial numbers, not dynamically.
+  strict_typing: done
