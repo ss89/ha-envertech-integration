@@ -23,13 +23,23 @@ async def check_supervisor_addon(
 
     Returns addon info dict with hostname, options, state on success,
     or None if the addon is not available.
-    On failure, logs the specific reason at DEBUG level.
     """
     api_host = os.environ.get("SUPERVISOR", "http://supervisor")
     token = os.environ.get("SUPERVISOR_TOKEN", "")
 
+    _LOGGER.debug(
+        "Supervisor check: api_host=%s, token_present=%s",
+        api_host,
+        bool(token),
+    )
+
     if not api_host or not token:
-        _LOGGER.debug("Supervisor API not available (missing env vars)")
+        _LOGGER.debug(
+            "Supervisor check: not available (api_host=%s, token_present=%s). "
+            "This integration requires HA OS or HA Container.",
+            api_host,
+            bool(token),
+        )
         return None
 
     session = async_get_clientsession(hass)
@@ -37,14 +47,21 @@ async def check_supervisor_addon(
 
     # Try each known slug variant in order
     for slug in SUPERVISOR_ADDON_SLUGS:
+        _LOGGER.debug("Supervisor check: trying slug '%s'", slug)
         try:
             url = f"{api_host}/addons/{slug}/info"
             headers = {"Authorization": f"Bearer {token}"}
 
+            _LOGGER.debug("Supervisor check: GET %s", url)
             async with session.get(url, headers=headers, timeout=timeout) as resp:
+                _LOGGER.debug(
+                    "Supervisor check: status %d for slug '%s'",
+                    resp.status,
+                    slug,
+                )
                 if resp.status != 200:
                     _LOGGER.debug(
-                        "Addon %s not found (status %d). "
+                        "Supervisor check: addon %s not found (status %d). "
                         "If your addon slug differs, update SUPERVISOR_ADDON_SLUGS.",
                         slug,
                         resp.status,
@@ -53,7 +70,7 @@ async def check_supervisor_addon(
                 data = await resp.json()
         except Exception as exc:  # noqa: BLE001
             _LOGGER.debug(
-                "Failed to check addon %s: %s. "
+                "Supervisor check: failed for slug '%s': %s. "
                 "Ensure HA OS/Container is used and the addon is installed.",
                 slug,
                 exc,
@@ -67,9 +84,16 @@ async def check_supervisor_addon(
         hostname = addon.get("hostname")
         options = addon.get("options", {})
 
+        _LOGGER.debug(
+            "Supervisor check: slug '%s' found (state=%s, hostname=%s)",
+            slug,
+            state,
+            hostname,
+        )
+
         if state != "started" or not hostname:
             _LOGGER.debug(
-                "Addon %s not ready (state=%s, hostname=%s). "
+                "Supervisor check: addon %s not ready (state=%s, hostname=%s). "
                 "Ensure the addon is running.",
                 slug,
                 state,
@@ -77,14 +101,21 @@ async def check_supervisor_addon(
             )
             continue
 
+        _LOGGER.info(
+            "Supervisor check: addon '%s' ready (hostname=%s, state=%s)",
+            slug,
+            hostname,
+            state,
+        )
         return {
             "hostname": hostname,
             "options": options,
             "state": state,
+            "slug": slug,
         }
 
     _LOGGER.debug(
-        "OpenEVT addon not found with any known slug (%s). "
+        "Supervisor check: no addon found with any known slug (%s). "
         "Check the addon slug in HA Supervisor settings.",
         SUPERVISOR_ADDON_SLUGS,
     )
@@ -101,11 +132,13 @@ async def fetch_inverter_status(hass: HomeAssistant, url: str) -> dict[str, Any]
     Returns:
         Parsed JSON response dict, or None on failure.
     """
+    _LOGGER.debug("Fetching inverter status from %s", url)
     session = async_get_clientsession(hass)
     timeout = ClientTimeout(total=10)
 
     try:
         async with session.get(url, timeout=timeout) as resp:
+            _LOGGER.debug("Inverter endpoint status: %d", resp.status)
             if resp.status != 200:
                 _LOGGER.debug("Inverter endpoint returned status %d", resp.status)
                 return None
@@ -122,13 +155,15 @@ def parse_inverter_status(data: dict[str, Any] | None) -> dict[str, Any] | None:
     or None if data is invalid.
     """
     if not data:
+        _LOGGER.debug("parse_inverter_status: no data provided")
         return None
 
     inverter_id = data.get("InverterId")
     if not inverter_id:
-        _LOGGER.debug("Missing InverterId in inverter response")
+        _LOGGER.debug("parse_inverter_status: missing InverterId")
         return None
 
+    _LOGGER.debug("parse_inverter_status: InverterId=%s", inverter_id)
     return {
         "InverterId": str(inverter_id),
         "Module1": data.get("Module1", {}),

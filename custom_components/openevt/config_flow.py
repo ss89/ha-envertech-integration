@@ -30,29 +30,44 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
     def __init__(self) -> None:
         """Initialize."""
         self._addon_info: dict[str, Any] | None = None
+        self._urls: list[str] = []
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle the initial step."""
+        _LOGGER.info("Config flow: starting user step")
+        
         if user_input is None:
-            # Try to auto-detect the addon
+            _LOGGER.info("Config flow: attempting addon auto-detection")
             addon_info = await check_supervisor_addon(self.hass)
             if addon_info:
+                _LOGGER.info(
+                    "Config flow: addon detected (hostname=%s, slug=%s)",
+                    addon_info["hostname"],
+                    addon_info.get("slug", "unknown"),
+                )
                 return await self._async_create_entry_from_addon(addon_info)
-            # Auto-discovery failed — show manual form as fallback
-            # (supervisor may not be available on HA Core)
+            
+            _LOGGER.warning(
+                "Config flow: addon auto-detection failed. "
+                "Showing manual form. "
+                "Ensure the OpenEVT addon is installed and running in Home Assistant Supervisor."
+            )
             return self._show_manual_form()
 
+        _LOGGER.info("Config flow: user submitted manual input")
         return self._async_create_entry_from_manual(user_input)
 
     async def async_step_manual(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle manual configuration (shown after auto-discovery fails)."""
+        _LOGGER.info("Config flow: manual step entered")
         if user_input is None:
             return self._show_manual_form()
 
+        _LOGGER.info("Config flow: manual step submitted")
         return self._async_create_entry_from_manual(user_input)
 
     async def _async_create_entry_from_addon(
@@ -60,7 +75,15 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
     ) -> ConfigFlowResult:
         """Create entry from detected addon."""
         hostname = addon_info["hostname"]
+        slug = addon_info.get("slug", "unknown")
         url = f"http://{hostname}:{SUPERVISOR_ADDON_PORT}/inverter"
+
+        _LOGGER.info(
+            "Config flow: creating entry from addon (slug=%s, hostname=%s, url=%s)",
+            slug,
+            hostname,
+            url,
+        )
 
         self._urls = [url]
 
@@ -83,7 +106,10 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         url_raw = user_input["url"]
         urls = [u.strip() for u in url_raw.split(";") if u.strip()]
 
+        _LOGGER.info("Config flow: creating entry from manual input (urls=%s)", urls)
+
         if not urls:
+            _LOGGER.warning("Config flow: empty URL provided")
             return self._show_manual_form(errors={"url": "empty_url"})
 
         self._urls = urls
@@ -104,13 +130,16 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle reconfiguration of the integration."""
+        _LOGGER.info("Config flow: starting reconfigure step")
         if user_input is None:
             return self._show_reconfigure_form()
 
+        _LOGGER.info("Config flow: reconfigure step submitted")
         return self._async_update_entry(user_input)
 
     def _show_reconfigure_form(self, errors: dict[str, str] | None = None) -> ConfigFlowResult:
         """Show the reconfiguration form."""
+        _LOGGER.debug("Config flow: showing reconfigure form")
         return self.async_show_form(
             step_id="reconfigure",
             data_schema=STEP_USER_DATA_SCHEMA,
@@ -122,7 +151,10 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         url_raw = user_input["url"]
         urls = [u.strip() for u in url_raw.split(";") if u.strip()]
 
+        _LOGGER.info("Config flow: updating entry (urls=%s)", urls)
+
         if not urls:
+            _LOGGER.warning("Config flow: empty URL in reconfigure")
             return self._show_reconfigure_form(errors={"url": "empty_url"})
 
         return self.async_update_reload_and_abort(
@@ -132,6 +164,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
 
     def _show_manual_form(self, errors: dict[str, str] | None = None) -> ConfigFlowResult:
         """Show the manual configuration form."""
+        _LOGGER.debug("Config flow: showing manual form")
         return self.async_show_form(
             step_id="user",
             data_schema=STEP_USER_DATA_SCHEMA,

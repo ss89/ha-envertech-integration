@@ -4,12 +4,12 @@
     "step": {
       "user": {
         "title": "Configure OpenEVT",
-        "description": "Auto-detection of the OpenEVT addon failed. Enter the inverter endpoint URL(s) manually. For multiple inverters, separate values with semicolons (`;`).",
+        "description": "The OpenEVT addon was not detected in Home Assistant Supervisor.\n\nEnter the inverter endpoint URL(s) manually. For multiple inverters, separate values with semicolons (`;`).\n\nIf you have the OpenEVT addon installed, ensure it is running and you are using Home Assistant OS or Home Assistant Container.",
         "data": {
           "url": "Inverter Endpoint URL(s)"
         },
         "data_description": {
-          "url": "HTTP URL to the /inverter endpoint (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons."
+          "url": "HTTP URL to the /inverter endpoint. The default format is http://<addon-hostname>:9090/inverter (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons."
         }
       },
       "reconfigure": {
@@ -19,7 +19,7 @@
           "url": "Inverter Endpoint URL(s)"
         },
         "data_description": {
-          "url": "HTTP URL to the /inverter endpoint (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons."
+          "url": "HTTP URL to the /inverter endpoint. For multiple inverters, separate with semicolons."
         }
       }
     },
