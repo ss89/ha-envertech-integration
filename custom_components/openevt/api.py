@@ -27,6 +27,10 @@ async def check_supervisor_addon(
     api_host = os.environ.get("SUPERVISOR", "http://supervisor")
     token = os.environ.get("SUPERVISOR_TOKEN", "")
 
+    # Ensure api_host always has a scheme (SUPERVISOR env var may be bare IP)
+    if not api_host.startswith(("http://", "https://")):
+        api_host = f"http://{api_host}"
+
     _LOGGER.warning(
         "Supervisor check: api_host=%s, token_present=%s",
         api_host,
