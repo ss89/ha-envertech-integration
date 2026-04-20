@@ -70,9 +70,10 @@ async def check_supervisor_addon(
                 data = await resp.json()
         except Exception as exc:  # noqa: BLE001
             _LOGGER.warning(
-                "Supervisor check: failed for slug '%s': %s. "
+                "Supervisor check: failed for slug '%s': %s (%s). "
                 "Ensure HA OS/Container is used and the addon is installed.",
                 slug,
+                type(exc).__name__,
                 exc,
             )
             continue
