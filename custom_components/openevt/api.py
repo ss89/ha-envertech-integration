@@ -27,14 +27,14 @@ async def check_supervisor_addon(
     api_host = os.environ.get("SUPERVISOR", "http://supervisor")
     token = os.environ.get("SUPERVISOR_TOKEN", "")
 
-    _LOGGER.debug(
+    _LOGGER.warning(
         "Supervisor check: api_host=%s, token_present=%s",
         api_host,
         bool(token),
     )
 
     if not api_host or not token:
-        _LOGGER.debug(
+        _LOGGER.warning(
             "Supervisor check: not available (api_host=%s, token_present=%s). "
             "This integration requires HA OS or HA Container.",
             api_host,
@@ -47,20 +47,20 @@ async def check_supervisor_addon(
 
     # Try each known slug variant in order
     for slug in SUPERVISOR_ADDON_SLUGS:
-        _LOGGER.debug("Supervisor check: trying slug '%s'", slug)
+        _LOGGER.warning("Supervisor check: trying slug '%s'", slug)
         try:
             url = f"{api_host}/addons/{slug}/info"
             headers = {"Authorization": f"Bearer {token}"}
 
-            _LOGGER.debug("Supervisor check: GET %s", url)
+            _LOGGER.warning("Supervisor check: GET %s", url)
             async with session.get(url, headers=headers, timeout=timeout) as resp:
-                _LOGGER.debug(
+                _LOGGER.warning(
                     "Supervisor check: status %d for slug '%s'",
                     resp.status,
                     slug,
                 )
                 if resp.status != 200:
-                    _LOGGER.debug(
+                    _LOGGER.warning(
                         "Supervisor check: addon %s not found (status %d). "
                         "If your addon slug differs, update SUPERVISOR_ADDON_SLUGS.",
                         slug,
@@ -69,7 +69,7 @@ async def check_supervisor_addon(
                     continue
                 data = await resp.json()
         except Exception as exc:  # noqa: BLE001
-            _LOGGER.debug(
+            _LOGGER.warning(
                 "Supervisor check: failed for slug '%s': %s. "
                 "Ensure HA OS/Container is used and the addon is installed.",
                 slug,
@@ -84,7 +84,7 @@ async def check_supervisor_addon(
         hostname = addon.get("hostname")
         options = addon.get("options", {})
 
-        _LOGGER.debug(
+        _LOGGER.warning(
             "Supervisor check: slug '%s' found (state=%s, hostname=%s)",
             slug,
             state,
@@ -92,7 +92,7 @@ async def check_supervisor_addon(
         )
 
         if state != "started" or not hostname:
-            _LOGGER.debug(
+            _LOGGER.warning(
                 "Supervisor check: addon %s not ready (state=%s, hostname=%s). "
                 "Ensure the addon is running.",
                 slug,
@@ -114,7 +114,7 @@ async def check_supervisor_addon(
             "slug": slug,
         }
 
-    _LOGGER.debug(
+    _LOGGER.warning(
         "Supervisor check: no addon found with any known slug (%s). "
         "Check the addon slug in HA Supervisor settings.",
         SUPERVISOR_ADDON_SLUGS,
