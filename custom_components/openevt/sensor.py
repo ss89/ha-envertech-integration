@@ -122,7 +122,6 @@ async def async_setup_entry(
 ) -> None:
     """Set up OpenEVT sensors from config entry."""
     coordinator: OpenEVTCoordinator = entry.runtime_data
-    serial_numbers: list[str] = entry.data["serial_numbers"]
 
     entities: list[OpenEVTSensorEntity] = []
 
@@ -130,10 +129,10 @@ async def async_setup_entry(
     entities.append(OpenEVTConnectionStatusSensor(coordinator))
     entities.append(OpenEVTInverterIDSensor(coordinator))
 
-    # Per-serial-number devices
-    for serial in serial_numbers:
-        device_id = f"envertech-{serial}"
-        device_name = f"Envertech {serial}"
+    # Per-inverter devices (keys are InverterId from coordinator.data)
+    for inverter_id in coordinator.data.keys():
+        device_id = f"openevt-{inverter_id}"
+        device_name = f"OpenEVT {inverter_id}"
 
         for module_key in (KEY_MODULE1, KEY_MODULE2):
             for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
@@ -141,7 +140,7 @@ async def async_setup_entry(
                     OpenEVTSensorEntity(
                         coordinator,
                         desc,
-                        serial,
+                        inverter_id,
                         module_key,
                         device_id,
                         device_name,
@@ -160,7 +159,7 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
         self,
         coordinator: OpenEVTCoordinator,
         description: OpenEVTSensorEntityDescription,
-        serial: str,
+        inverter_id: str,
         module: str,
         device_id: str,
         device_name: str,
@@ -168,9 +167,9 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
         """Initialize entity."""
         super().__init__(coordinator)
         self.entity_description = description
-        self._serial = serial
+        self._inverter_id = inverter_id
         self._module = module
-        self._attr_unique_id = f"{serial}-{module}-{description.key}"
+        self._attr_unique_id = f"{inverter_id}-{module}-{description.key}"
         self._attr_device_info = {
             "identifiers": {(DOMAIN, device_id)},
             "name": device_name,
@@ -181,8 +180,8 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
     @property
     def native_value(self):
         """Return the native value."""
-        serial_data = self.coordinator.data.get(self._serial, {})
-        module_data = serial_data.get(self._module, {})
+        inverter_data = self.coordinator.data.get(self._inverter_id, {})
+        module_data = inverter_data.get(self._module, {})
         return self.entity_description.value_fn(module_data)
 
     @property
@@ -190,8 +189,8 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
         """Return if entity is available."""
         if not self.coordinator.last_update_success:
             return False
-        serial_data = self.coordinator.data.get(self._serial, {})
-        module_data = serial_data.get(self._module, {})
+        inverter_data = self.coordinator.data.get(self._inverter_id, {})
+        module_data = inverter_data.get(self._module, {})
         value = self.entity_description.value_fn(module_data)
         return value is not None
 
@@ -253,8 +252,8 @@ class OpenEVTInverterIDSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntit
         if not self.coordinator.data:
             return None
         # Return the first inverter ID found
-        for serial_data in self.coordinator.data.values():
-            inverter_id = serial_data.get(KEY_INVERTER_ID)
+        for inverter_data in self.coordinator.data.values():
+            inverter_id = inverter_data.get(KEY_INVERTER_ID)
             if inverter_id:
                 return str(inverter_id)
         return None

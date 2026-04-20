@@ -38,17 +38,17 @@ async def async_get_device_diagnostics(
     """Return diagnostics for a device."""
     coordinator = entry.runtime_data
 
-    # Find the serial number for this device
-    device_serial = None
+    # Find the inverter ID for this device
+    device_inverter_id = None
     for identifier in device.identifiers:
-        if identifier[0] == DOMAIN and identifier[1].startswith("envertech-"):
-            device_serial = identifier[1].replace("envertech-", "")
+        if identifier[0] == DOMAIN and identifier[1].startswith("openevt-"):
+            device_inverter_id = identifier[1].replace("openevt-", "")
             break
 
     return {
         "entry_data": _redact(entry.data),
-        "device_serial": device_serial,
-        "coordinator_data": coordinator.data.get(device_serial, {})
+        "device_inverter_id": device_inverter_id,
+        "coordinator_data": coordinator.data.get(device_inverter_id, {})
         if coordinator
         else {},
     }

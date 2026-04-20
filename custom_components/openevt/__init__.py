@@ -22,9 +22,8 @@ async def async_setup_entry(
 ) -> bool:
     """Set up OpenEVT from a config entry."""
     urls: list[str] = entry.data["urls"]
-    serial_numbers: list[str] = entry.data["serial_numbers"]
 
-    coordinator = OpenEVTCoordinator(hass, urls, serial_numbers)
+    coordinator = OpenEVTCoordinator(hass, urls)
     await coordinator.async_config_entry_first_refresh()
 
     entry.runtime_data = coordinator
