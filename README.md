@@ -5,14 +5,13 @@ A Home Assistant custom integration for monitoring Envertech microinverters via 
 ## Features
 
 - **Auto-detection**: Discovers the OpenEVT Supervisor add-on via the Home Assistant Supervisor API
-- **Multi-inverter support**: Configure multiple microinverters with semicolon-separated serial numbers
 - **Full data exposure**: All inverter fields exposed as sensors (voltage, power, energy, frequency, temperature, firmware info)
 - **Manual fallback**: Manual configuration option when the Supervisor add-on is not available
 - **Reconfigurable**: Update settings without removing and re-adding the integration
 - **Diagnostics**: Built-in diagnostics for troubleshooting
 - **Responsive polling**: 5-second update interval for near real-time monitoring
-- **Multiple devices**: One gateway device + one device per microinverter serial number
-
+- **Multi-inverter support**: Configure multiple microinverters with semicolon-separated URLs
+- **Multiple devices**: One gateway device + one device per microinverter
 ## Installation
 
 ### Prerequisites
@@ -75,7 +74,6 @@ After installation, add the integration via the Home Assistant UI:
 4. The integration will **automatically detect** the OpenEVT add-on if it's running
 5. If auto-detection fails, you can configure manually:
    - **Inverter Endpoint URL(s)**: HTTP URL to the `/inverter` endpoint (e.g., `http://openevt:9090/inverter`)
-   - **Serial Number(s)**: Serial number(s) of your microinverter(s)
 
 For multiple inverters, separate values with semicolons (`;`).
 
@@ -84,7 +82,6 @@ For multiple inverters, separate values with semicolons (`;`).
 | Parameter | Type | Description | Example |
 |-----------|------|-------------|---------|
 | `url` | String | HTTP URL(s) to the `/inverter` endpoint | `http://openevt:9090/inverter` |
-| `serial_numbers` | String | Serial number(s) of microinverter(s) | `31583078` |
 
 ### Reconfiguring
 
@@ -93,7 +90,7 @@ To update the configuration without removing the integration:
 1. Go to **Settings** → **Devices & Services**
 2. Click on the **OpenEVT** integration
 3. Click **Reconfigure**
-4. Update the URL(s) and/or serial number(s)
+4. Update the URL(s)
 5. Click **Submit**
 
 ## Devices & Entities
@@ -106,12 +103,9 @@ Tracks the integration status itself.
 |--------|-------------|-------------|
 | Connection Status | Enum | `connected` / `disconnected` |
 | Inverter ID | Diagnostic | Inverter ID from the first detected inverter |
+### Microinverter Devices: Envertech
 
-### Microinverter Devices: Envertech \<serial\>
-
-One device per microinverter serial number. Each exposes 14 entities:
-
-#### Module 1 Sensors
+One device per microinverter. Each exposes 14 entities:
 
 | Entity | Device Class | Unit | State Class | Description |
 |--------|-------------|------|-------------|-------------|
@@ -122,8 +116,7 @@ One device per microinverter serial number. Each exposes 14 entities:
 | Energy (Total) | Energy | kWh | Total | Cumulative energy produced |
 | Temperature | Temperature | °C | — | Module temperature |
 
-#### Module 1 Info
-
+#### Module 1 Sensors
 | Entity | Type | Description |
 |--------|------|-------------|
 | Module ID | Diagnostic | Module identifier string |
@@ -198,10 +191,8 @@ Device-specific diagnostics are also available from the device page.
 
 ### Multiple inverters not working
 
-- Ensure each inverter has a unique serial number
+- Ensure each inverter has a unique address
 - Verify addresses are separated by semicolons: `addr1;addr2`
-- Verify serial numbers are separated by semicolons: `serial1;serial2`
-- Serial numbers must be in the same order as their corresponding addresses
 
 ### Entities showing as unavailable
 
@@ -247,9 +238,23 @@ This will remove all associated devices and entities. The OpenEVT Supervisor add
 
 ## Support
 
-- **Documentation**: [OpenEVT GitHub](https://github.com/brandon1024/openevt)
+This project consists of two separate components:
+
+### OpenEVT (Monitoring Software)
+
+- **Maintained by**: [brandon1024](https://github.com/brandon1024)
+- **Repository**: [github.com/brandon1024/openevt](https://github.com/brandon1024/openevt)
 - **Issues**: [OpenEVT Issues](https://github.com/brandon1024/openevt/issues)
-- **Codeowners**: [@ss89](https://github.com/ss89)
+
+OpenEVT is the monitoring software that runs as a Home Assistant Supervisor add-on. It communicates with Envertech microinverters over the LAN and exposes their data via a REST API. Report bugs, feature requests, or any issues related to inverter communication, data parsing, or the add-on itself to the OpenEVT repository.
+
+### Home Assistant Integration
+
+- **Maintained by**: [ss89](https://github.com/ss89)
+- **Repository**: [github.com/ss89/ha-envertech-integration](https://github.com/ss89/ha-envertech-integration)
+- **Issues**: [ha-envertech-integration Issues](https://github.com/ss89/ha-envertech-integration/issues)
+
+This integration connects Home Assistant to the OpenEVT add-on, exposing inverter data as native Home Assistant sensors. Report issues related to integration setup, configuration, sensor data, or Home Assistant compatibility to this repository.
 
 ## License
 
