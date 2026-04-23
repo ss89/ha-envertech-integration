@@ -1,9 +1,8 @@
-"""Data update coordinator for the OpenEVT integration."""
-
 from __future__ import annotations
 
 import asyncio
 import logging
+from datetime import timedelta
 from typing import Any
 
 from homeassistant.core import HomeAssistant
@@ -28,7 +27,7 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             hass,
             _LOGGER,
             name="openevt",
-            update_interval=asyncio.timedelta(seconds=UPDATE_INTERVAL),
+            update_interval=timedelta(seconds=UPDATE_INTERVAL),
             parallel_updates=0,
         )
         self._urls = urls
