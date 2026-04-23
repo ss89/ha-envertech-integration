@@ -15,6 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Class to manage fetching Envertech inverter data via the OpenEVT API."""
+    parallel_updates = 0
 
     def __init__(
         self,
@@ -27,7 +28,6 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             _LOGGER,
             name="openevt",
             update_interval=timedelta(seconds=UPDATE_INTERVAL),
-            parallel_updates=0,
         )
         self._urls = urls
         self.data: dict[str, Any] = {}
