@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import logging
-
-_LOGGER = logging.getLogger(__name__)
-
+from dataclasses import dataclass, field
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -38,16 +36,17 @@ from .const import (
 )
 from .coordinator import OpenEVTCoordinator
 
+
 # Coordinator centralizes data updates
 PARALLEL_UPDATES = 0
 
 
-class OpenEVTSensorEntityDescription(SensorEntityDescription):
+@dataclass(frozen=True, kw_only=True)
+class OpenEVTSensorEntityDescription(SensorEntityDescription._dataclass):
     """A class that describes sensor entities for Envertech inverters."""
 
-    key: str = ""
-    module: str = ""
-    value_fn: callable = lambda data: data
+    module: str = field(default="")
+    value_fn: callable = field(default=lambda data: data)
 
 
 MODULE_SENSOR_DESCRIPTIONS: list[OpenEVTSensorEntityDescription] = [
@@ -97,7 +96,7 @@ MODULE_SENSOR_DESCRIPTIONS: list[OpenEVTSensorEntityDescription] = [
         translation_key="temperature",
         module=FIELD_TEMPERATURE,
         device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement="°C",
+        native_unit_of_measurement="\u00b0C",
         value_fn=lambda d: d.get(FIELD_TEMPERATURE),
     ),
 ]
@@ -118,6 +117,9 @@ MODULE_INFO_DESCRIPTIONS: list[OpenEVTSensorEntityDescription] = [
         value_fn=lambda d: str(d.get(FIELD_FIRMWARE_VERSION, "")),
     ),
 ]
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -320,17 +322,12 @@ class OpenEVTInverterIDSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntit
 
     @property
     def native_value(self) -> str | None:
-        """Return inverter ID."""
-        if not self.coordinator.data:
-            return None
-        # Return the first inverter ID found
-        for inverter_data in self.coordinator.data.values():
-            inverter_id = inverter_data.get(KEY_INVERTER_ID)
-            if inverter_id:
-                return str(inverter_id)
+        """Return the first inverter ID."""
+        if self.coordinator.data:
+            return next(iter(self.coordinator.data.keys()), None)
         return None
 
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        return bool(self.coordinator.data)
+        return True
