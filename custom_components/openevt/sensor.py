@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import logging
+
+_LOGGER = logging.getLogger(__name__)
+
+
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -125,6 +130,9 @@ async def async_setup_entry(
 
     entities: list[OpenEVTSensorEntity] = []
 
+    # Track inverter IDs seen so far (across updates)
+    known_inverter_ids: set[str] = set()
+
     # Gateway entities
     entities.append(OpenEVTConnectionStatusSensor(coordinator))
     entities.append(OpenEVTInverterIDSensor(coordinator))
@@ -148,6 +156,70 @@ async def async_setup_entry(
                 )
 
     async_add_entities(entities)
+
+    # Access the EntityPlatform to call async_update_list on coordinator changes
+    platform = async_add_entities.__self__  # type: ignore[attr-defined]
+
+    def _on_coordinator_update() -> None:
+        """Handle coordinator data updates — add/remove inverter entities."""
+        current_ids = coordinator.inverter_ids
+        new_ids = current_ids - known_inverter_ids
+        stale_ids = known_inverter_ids - current_ids
+
+        if not new_ids and not stale_ids:
+            return
+
+        _LOGGER.info(
+            "Inverter list changed: +%s, -%s (current: %s)",
+            new_ids,
+            stale_ids,
+            current_ids,
+        )
+
+        new_entities: list[OpenEVTSensorEntity] = []
+        for inverter_id in new_ids:
+            device_id = f"openevt-{inverter_id}"
+            device_name = f"OpenEVT {inverter_id}"
+            for module_key in (KEY_MODULE1, KEY_MODULE2):
+                for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
+                    new_entities.append(
+                        OpenEVTSensorEntity(
+                            coordinator,
+                            desc,
+                            inverter_id,
+                            module_key,
+                            device_id,
+                            device_name,
+                        )
+                    )
+
+        stale_entities: list[OpenEVTSensorEntity] = []
+        for inverter_id in stale_ids:
+            device_id = f"openevt-{inverter_id}"
+            device_name = f"OpenEVT {inverter_id}"
+            for module_key in (KEY_MODULE1, KEY_MODULE2):
+                for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
+                    stale_entities.append(
+                        OpenEVTSensorEntity(
+                            coordinator,
+                            desc,
+                            inverter_id,
+                            module_key,
+                            device_id,
+                            device_name,
+                        )
+                    )
+
+        if new_entities:
+            async_add_entities(new_entities)
+
+        if stale_entities and platform._async_remove_entities:
+            platform._async_remove_entities([e.entity_id for e in stale_entities])
+
+        known_inverter_ids.update(new_ids)
+        known_inverter_ids -= stale_ids
+
+    coordinator.async_add_listener(_on_coordinator_update)
 
 
 class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):

@@ -33,11 +33,13 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=timedelta(seconds=UPDATE_INTERVAL),
         )
         self._urls = urls
+        self._known_inverter_ids: set[str] = set()
         self.data: dict[str, Any] = {}
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data from all inverter endpoints."""
         result: dict[str, Any] = {}
+        any_failure = False
 
         for url in self._urls:
             try:
@@ -51,15 +53,46 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 else:
                     _LOGGER.debug("No valid data from %s (inverter may be unavailable)", url)
             except Exception as exc:
+                any_failure = True
                 _LOGGER.debug("Failed to update %s: %s", url, exc)
-                raise UpdateFailed(f"Failed to fetch data from {url}: {exc}") from exc
-
-        # Inverter may be powered off or in standby — return empty data
-        # so sensors show as unavailable instead of crashing
-        if not result:
-            _LOGGER.debug("No inverter data received from any endpoint (inverter may be unavailable)")
-            self.data = {}
-            return {}
+                continue
 
         self.data = result
+
+        if not result and any_failure:
+            raise UpdateFailed("Failed to fetch data from any endpoint")
+
         return result
+
+    @property
+    def inverter_ids(self) -> set[str]:
+        """Return the set of known inverter IDs from the latest data."""
+        return set(self.data.keys())
+
+    def async_update_list(
+        self,
+        async_add_entities: Any,
+        async_remove_entities: Any | None = None,
+    ) -> None:
+        """Notify sensor platform of new/removed inverters.
+
+        Compares known inverter IDs against current data and returns
+        the sets of new and stale inverter IDs for the sensor platform
+        to act on.
+        """
+        current_ids = set(self.data.keys())
+        known_ids = set(self._known_inverter_ids)
+
+        new_ids = current_ids - known_ids
+        stale_ids = known_ids - current_ids
+
+        if new_ids or stale_ids:
+            _LOGGER.info(
+                "Inverter list changed: +%s, -%s (current: %s)",
+                new_ids,
+                stale_ids,
+                current_ids,
+            )
+
+        self._known_inverter_ids = current_ids
+        return new_ids, stale_ids
