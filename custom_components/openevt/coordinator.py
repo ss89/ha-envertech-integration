@@ -1,3 +1,5 @@
+"""Data update coordinator for the OpenEVT integration."""
+
 from __future__ import annotations
 
 import logging
@@ -15,6 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Class to manage fetching Envertech inverter data via the OpenEVT API."""
+
     parallel_updates = 0
 
     def __init__(
@@ -46,13 +49,17 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     result[inverter_id] = parsed
                     _LOGGER.debug("Fetched data for %s: %s", inverter_id, parsed.get("InverterId"))
                 else:
-                    _LOGGER.debug("No valid data from %s", url)
+                    _LOGGER.debug("No valid data from %s (inverter may be unavailable)", url)
             except Exception as exc:
                 _LOGGER.debug("Failed to update %s: %s", url, exc)
                 raise UpdateFailed(f"Failed to fetch data from {url}: {exc}") from exc
 
+        # Inverter may be powered off or in standby — return empty data
+        # so sensors show as unavailable instead of crashing
         if not result:
-            raise UpdateFailed("No inverter data received from any endpoint")
+            _LOGGER.debug("No inverter data received from any endpoint (inverter may be unavailable)")
+            self.data = {}
+            return {}
 
         self.data = result
         return result

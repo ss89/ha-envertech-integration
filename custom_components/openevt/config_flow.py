@@ -7,7 +7,7 @@ from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.core import callback
 
 from .api import check_supervisor_addon
@@ -37,7 +37,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
     ) -> ConfigFlowResult:
         """Handle the initial step."""
         _LOGGER.info("Config flow: starting user step")
-        
+
         if user_input is None:
             _LOGGER.info("Config flow: attempting addon auto-detection")
             addon_info = await check_supervisor_addon(self.hass)
@@ -48,7 +48,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
                     addon_info.get("slug", "unknown"),
                 )
                 return await self._async_create_entry_from_addon(addon_info)
-            
+
             _LOGGER.warning(
                 "Config flow: addon auto-detection failed. "
                 "Showing manual form. "
@@ -175,6 +175,53 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
     @callback
     def async_get_options_flow(
         config_entry: Any,
-    ) -> None:
-        """No options flow supported."""
-        return None
+    ) -> OptionsFlow:
+        """Return the options flow."""
+        return OpenEVTOptionsFlowHandler(config_entry)
+
+
+class OpenEVTOptionsFlowHandler(OptionsFlow):
+    """Handle OpenEVT options."""
+
+    def __init__(self, config_entry: Any) -> None:
+        """Initialize options flow."""
+        self._config_entry = config_entry
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Manage the options."""
+        if user_input is None:
+            current_url = "; ".join(self._config_entry.data.get("urls", []))
+            return self.async_show_form(
+                step_id="init",
+                data_schema=vol.Schema(
+                    {
+                        vol.Required(
+                            "url",
+                            default=current_url,
+                        ): str,
+                    }
+                ),
+            )
+
+        url_raw = user_input["url"]
+        urls = [u.strip() for u in url_raw.split(";") if u.strip()]
+
+        if not urls:
+            current_url = "; ".join(self._config_entry.data.get("urls", []))
+            return self.async_show_form(
+                step_id="init",
+                data_schema=vol.Schema(
+                    {
+                        vol.Required("url", default=current_url): str,
+                    }
+                ),
+                errors={"url": "empty_url"},
+            )
+
+        self.hass.config_entries.async_update_entry(
+            self._config_entry,
+            data={"urls": urls},
+        )
+        return self.async_create_entry(data={})
