@@ -22,9 +22,15 @@ class TestAsyncSetupEntry:
         )
         entry.add_to_hass(hass)
 
-        with patch(
-            "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
-            new_callable=AsyncMock,
+        with (
+            patch(
+                "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
+                new_callable=AsyncMock,
+            ),
+            patch(
+                "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+                new_callable=AsyncMock,
+            ),
         ):
             result = await async_setup_entry(hass, entry)
 
@@ -41,12 +47,17 @@ class TestAsyncSetupEntry:
         )
         entry.add_to_hass(hass)
 
-        with patch(
-            "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
-            new_callable=AsyncMock,
+        with (
+            patch(
+                "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
+                new_callable=AsyncMock,
+            ),
+            patch(
+                "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+                new_callable=AsyncMock,
+            ),
         ):
             await async_setup_entry(hass, entry)
-
         assert hasattr(entry, "runtime_data")
         assert isinstance(entry.runtime_data, OpenEVTCoordinator)
 
@@ -63,15 +74,19 @@ class TestAsyncUnloadEntry:
         )
         entry.add_to_hass(hass)
 
-        with patch(
-            "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
-            new_callable=AsyncMock,
+        with (
+            patch(
+                "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
+                new_callable=AsyncMock,
+            ),
+            patch(
+                "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+                new_callable=AsyncMock,
+            ),
         ):
             await async_setup_entry(hass, entry)
 
-        with patch.object(
-            hass.config_entries, "async_unload_platforms", return_value=True
-        ):
+        with patch.object(hass.config_entries, "async_unload_platforms", return_value=True):
             result = await async_unload_entry(hass, entry)
 
         assert result is True
@@ -85,15 +100,19 @@ class TestAsyncUnloadEntry:
         )
         entry.add_to_hass(hass)
 
-        with patch(
-            "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
-            new_callable=AsyncMock,
+        with (
+            patch(
+                "custom_components.openevt.coordinator.OpenEVTCoordinator.async_config_entry_first_refresh",
+                new_callable=AsyncMock,
+            ),
+            patch(
+                "homeassistant.config_entries.ConfigEntries.async_forward_entry_setups",
+                new_callable=AsyncMock,
+            ),
         ):
             await async_setup_entry(hass, entry)
 
-        with patch.object(
-            hass.config_entries, "async_unload_platforms", return_value=False
-        ):
+        with patch.object(hass.config_entries, "async_unload_platforms", return_value=False):
             result = await async_unload_entry(hass, entry)
 
         assert result is False
