@@ -72,11 +72,20 @@
       "firmware_version": {
         "name": "Firmware Version"
       },
-      "connection_status": {
-        "name": "Connection Status"
+      "status": {
+        "name": "Status"
       },
-      "inverter_id": {
-        "name": "Inverter ID"
+      "last_update": {
+        "name": "Last Update"
+      },
+      "response_time": {
+        "name": "Response Time"
+      },
+      "consecutive_failures": {
+        "name": "Consecutive Failures"
+      },
+      "firmware_update": {
+        "name": "Firmware Update"
       }
     }
   },

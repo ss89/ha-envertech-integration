@@ -1,6 +1,5 @@
 """Tests for the OpenEVT sensor entities."""
 
-
 from homeassistant.components.sensor import SensorStateClass
 
 from custom_components.openevt.const import (
@@ -13,8 +12,7 @@ from custom_components.openevt.coordinator import OpenEVTCoordinator
 from custom_components.openevt.sensor import (
     MODULE_INFO_DESCRIPTIONS,
     MODULE_SENSOR_DESCRIPTIONS,
-    OpenEVTConnectionStatusSensor,
-    OpenEVTInverterIDSensor,
+    OpenEVTStatusSensor,
     OpenEVTSensorEntity,
 )
 
@@ -158,7 +156,54 @@ class TestOpenEVTSensorEntity:
             "name": "OpenEVT 31583078",
             "manufacturer": "Envertech",
             "model": "Microinverter",
+            "sw_version": "1/0",
         }
+
+    def test_name_has_module_prefix(self, mock_coordinator):
+        """Test entity name is prefixed with ModuleId."""
+        entity = OpenEVTSensorEntity(
+            mock_coordinator,
+            MODULE_SENSOR_DESCRIPTIONS[0],
+            "31583078",
+            KEY_MODULE1,
+            "openevt-31583078",
+            "OpenEVT 31583078",
+        )
+        assert entity.name == "M001 Dc Voltage"
+
+    def test_name_module2_prefix(self, mock_coordinator):
+        """Test entity name uses Module2 ModuleId."""
+        entity = OpenEVTSensorEntity(
+            mock_coordinator,
+            MODULE_SENSOR_DESCRIPTIONS[0],
+            "31583078",
+            KEY_MODULE2,
+            "openevt-31583078",
+            "OpenEVT 31583078",
+        )
+        assert entity.name == "M002 Dc Voltage"
+
+    def test_name_no_module_id(self, hass):
+        """Test entity name falls back to description when no ModuleId."""
+        coord = OpenEVTCoordinator(hass, ["http://openevt:9090/inverter"])
+        coord.data = {
+            "31583078": {
+                "InverterId": "31583078",
+                "Module1": {"InputVoltageDC": 23.0},
+                "Module2": {},
+            }
+        }
+        coord.last_update_success = True
+
+        entity = OpenEVTSensorEntity(
+            coord,
+            MODULE_SENSOR_DESCRIPTIONS[0],
+            "31583078",
+            KEY_MODULE1,
+            "openevt-31583078",
+            "OpenEVT 31583078",
+        )
+        assert entity.name == "Dc Voltage"
 
     def test_available_when_connected(self, mock_coordinator):
         """Test entity is available when connected."""
@@ -201,12 +246,12 @@ class TestOpenEVTSensorEntity:
         assert entity.available is False
 
 
-class TestOpenEVTConnectionStatusSensor:
-    """Tests for OpenEVTConnectionStatusSensor."""
+class TestOpenEVTStatusSensor:
+    """Tests for OpenEVTStatusSensor."""
 
     def test_connected_status(self, mock_coordinator):
         """Test connected status."""
-        entity = OpenEVTConnectionStatusSensor(mock_coordinator)
+        entity = OpenEVTStatusSensor(mock_coordinator)
         assert entity.native_value == "connected"
         assert entity.available is True
 
@@ -216,13 +261,13 @@ class TestOpenEVTConnectionStatusSensor:
         coord.data = {}
         coord.last_update_success = False
 
-        entity = OpenEVTConnectionStatusSensor(coord)
+        entity = OpenEVTStatusSensor(coord)
         assert entity.native_value == "disconnected"
         assert entity.available is True
 
     def test_device_info(self, mock_coordinator):
         """Test gateway device info."""
-        entity = OpenEVTConnectionStatusSensor(mock_coordinator)
+        entity = OpenEVTStatusSensor(mock_coordinator)
         assert entity.device_info == {
             "identifiers": {(DOMAIN, GATEWAY_DEVICE_ID)},
             "name": "OpenEVT",
@@ -231,28 +276,9 @@ class TestOpenEVTConnectionStatusSensor:
         }
 
     def test_unique_id(self, mock_coordinator):
-        """Test connection status unique ID."""
-        entity = OpenEVTConnectionStatusSensor(mock_coordinator)
-        assert entity.unique_id == f"{GATEWAY_DEVICE_ID}-connection-status"
-
-
-class TestOpenEVTInverterIDSensor:
-    """Tests for OpenEVTInverterIDSensor."""
-
-    def test_inverter_id_value(self, mock_coordinator):
-        """Test inverter ID sensor value."""
-        entity = OpenEVTInverterIDSensor(mock_coordinator)
-        assert entity.native_value == "31583078"
-
-    def test_inverter_id_device_info(self, mock_coordinator):
-        """Test inverter ID gateway device info."""
-        entity = OpenEVTInverterIDSensor(mock_coordinator)
-        assert entity.device_info == {
-            "identifiers": {(DOMAIN, GATEWAY_DEVICE_ID)},
-            "name": "OpenEVT",
-            "manufacturer": "OpenEVT",
-            "model": "OpenEVT Gateway",
-        }
+        """Test status unique ID."""
+        entity = OpenEVTStatusSensor(mock_coordinator)
+        assert entity.unique_id == f"{GATEWAY_DEVICE_ID}-status"
 
 
 class TestModuleSensorDescriptions:
@@ -274,7 +300,5 @@ class TestModuleSensorDescriptions:
 
     def test_total_energy_has_total_state_class(self):
         """Test total energy sensor has TOTAL state class."""
-        energy_desc = next(
-            d for d in MODULE_SENSOR_DESCRIPTIONS if d.key == "total_energy"
-        )
+        energy_desc = next(d for d in MODULE_SENSOR_DESCRIPTIONS if d.key == "total_energy")
         assert energy_desc.state_class == SensorStateClass.TOTAL
