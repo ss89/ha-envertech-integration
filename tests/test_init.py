@@ -4,10 +4,10 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from homeassistant.core import HomeAssistant
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.openevt import async_setup_entry, async_unload_entry
 from custom_components.openevt.coordinator import OpenEVTCoordinator
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 
 class TestAsyncSetupEntry:

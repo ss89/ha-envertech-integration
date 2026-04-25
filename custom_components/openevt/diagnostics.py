@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Mapping
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -54,6 +55,6 @@ async def async_get_device_diagnostics(
     }
 
 
-def _redact(data: dict[str, Any]) -> dict[str, Any]:
+def _redact(data: Mapping[str, Any]) -> dict[str, Any]:
     """Redact sensitive data."""
     return {k: "REDACTED" if k in TO_REDACT else v for k, v in data.items()}

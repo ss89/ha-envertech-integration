@@ -1,12 +1,11 @@
 """Fixtures for OpenEVT integration tests."""
 
-from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.openevt.const import DOMAIN
 from custom_components.openevt.coordinator import OpenEVTCoordinator
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 
 @pytest.fixture

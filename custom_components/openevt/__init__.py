@@ -8,11 +8,10 @@ from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, PLATFORMS
-from .coordinator import OpenEVTCoordinator
-
 # Import diagnostics platform to ensure it's available
 from . import diagnostics  # noqa: F401
+from .const import PLATFORMS
+from .coordinator import OpenEVTCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 

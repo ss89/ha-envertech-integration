@@ -127,12 +127,11 @@ class TestCheckSupervisorAddon:
         with patch.dict(
             "os.environ",
             {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+        ), patch(
+            "custom_components.openevt.api.async_get_clientsession",
+            return_value=mock_session,
         ):
-            with patch(
-                "custom_components.openevt.api.async_get_clientsession",
-                return_value=mock_session,
-            ):
-                result = await check_supervisor_addon(hass)
+            result = await check_supervisor_addon(hass)
 
         assert result is not None
         assert result["hostname"] == "openevt"
@@ -141,11 +140,10 @@ class TestCheckSupervisorAddon:
     @pytest.mark.asyncio
     async def test_check_no_token(self, hass):
         """Test that missing token returns None."""
-        with patch.dict("os.environ", {"SUPERVISOR": "http://supervisor"}, clear=True):
-            with patch(
-                "custom_components.openevt.api.async_get_clientsession"
-            ) as mock_session:
-                result = await check_supervisor_addon(hass)
+        with patch.dict("os.environ", {"SUPERVISOR": "http://supervisor"}, clear=True), patch(
+            "custom_components.openevt.api.async_get_clientsession"
+        ) as mock_session:
+            result = await check_supervisor_addon(hass)
 
         assert result is None
         mock_session.assert_not_called()
@@ -166,12 +164,11 @@ class TestCheckSupervisorAddon:
         with patch.dict(
             "os.environ",
             {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+        ), patch(
+            "custom_components.openevt.api.async_get_clientsession",
+            return_value=mock_session,
         ):
-            with patch(
-                "custom_components.openevt.api.async_get_clientsession",
-                return_value=mock_session,
-            ):
-                result = await check_supervisor_addon(hass)
+            result = await check_supervisor_addon(hass)
 
         assert result is None
 
@@ -190,12 +187,11 @@ class TestCheckSupervisorAddon:
         with patch.dict(
             "os.environ",
             {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+        ), patch(
+            "custom_components.openevt.api.async_get_clientsession",
+            return_value=mock_session,
         ):
-            with patch(
-                "custom_components.openevt.api.async_get_clientsession",
-                return_value=mock_session,
-            ):
-                result = await check_supervisor_addon(hass)
+            result = await check_supervisor_addon(hass)
 
         assert result is None
 
@@ -215,12 +211,11 @@ class TestCheckSupervisorAddon:
         with patch.dict(
             "os.environ",
             {"SUPERVISOR": "172.30.32.2", "SUPERVISOR_TOKEN": "test-token"},
+        ), patch(
+            "custom_components.openevt.api.async_get_clientsession",
+            return_value=mock_session,
         ):
-            with patch(
-                "custom_components.openevt.api.async_get_clientsession",
-                return_value=mock_session,
-            ):
-                result = await check_supervisor_addon(hass)
+            result = await check_supervisor_addon(hass)
 
         assert result is not None
         # Verify the URL had http:// prepended
@@ -242,12 +237,11 @@ class TestCheckSupervisorAddon:
         with patch.dict(
             "os.environ",
             {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+        ), patch(
+            "custom_components.openevt.api.async_get_clientsession",
+            return_value=mock_session,
         ):
-            with patch(
-                "custom_components.openevt.api.async_get_clientsession",
-                return_value=mock_session,
-            ):
-                result = await check_supervisor_addon(hass)
+            result = await check_supervisor_addon(hass)
 
         assert result is None
         # Should have tried both slugs

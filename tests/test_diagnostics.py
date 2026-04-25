@@ -1,18 +1,18 @@
 """Tests for the OpenEVT diagnostics module."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntry
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.openevt.const import DOMAIN
 from custom_components.openevt.diagnostics import (
+    _redact,
     async_get_config_entry_diagnostics,
     async_get_device_diagnostics,
-    _redact,
 )
-from custom_components.openevt.const import DOMAIN
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 
 class TestRedact:

@@ -83,12 +83,11 @@ class TestCoordinatorUpdate:
             "custom_components.openevt.coordinator.fetch_inverter_status",
             new_callable=AsyncMock,
             side_effect=mock_fetch,
+        ), patch(
+            "custom_components.openevt.coordinator.parse_inverter_status",
+            return_value=mock_inverter_data,
         ):
-            with patch(
-                "custom_components.openevt.coordinator.parse_inverter_status",
-                return_value=mock_inverter_data,
-            ):
-                result = await coord._async_update_data()
+            result = await coord._async_update_data()
 
         assert "31583078" in result
         assert coord.last_update_success is True
@@ -121,9 +120,8 @@ class TestCoordinatorUpdate:
             "custom_components.openevt.coordinator.fetch_inverter_status",
             new_callable=AsyncMock,
             side_effect=mock_fetch_fail,
-        ):
-            with pytest.raises(UpdateFailed):
-                await coord._async_update_data()
+        ), pytest.raises(UpdateFailed):
+            await coord._async_update_data()
 
 class TestCoordinatorInverterIds:
     """Tests for inverter_ids tracking."""
@@ -260,12 +258,11 @@ class TestCoordinatorAsyncUpdateList:
             "custom_components.openevt.coordinator.fetch_inverter_status",
             new_callable=AsyncMock,
             side_effect=mock_fetch,
+        ), patch(
+            "custom_components.openevt.coordinator.parse_inverter_status",
+            side_effect=lambda d: d,
         ):
-            with patch(
-                "custom_components.openevt.coordinator.parse_inverter_status",
-                side_effect=lambda d: d,
-            ):
-                await coord._async_update_data()
+            await coord._async_update_data()
 
         new_ids, stale_ids = coord.async_update_list(None, None)
         assert new_ids == {"111111", "222222"}

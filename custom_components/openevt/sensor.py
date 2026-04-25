@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, ClassVar
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -30,24 +33,20 @@ from .const import (
     GATEWAY_DEVICE_ID,
     GATEWAY_DEVICE_MODEL,
     GATEWAY_DEVICE_NAME,
-    KEY_INVERTER_ID,
     KEY_MODULE1,
     KEY_MODULE2,
 )
 from .coordinator import OpenEVTCoordinator
-
 
 # Coordinator centralizes data updates
 PARALLEL_UPDATES = 0
 
 
 @dataclass(frozen=True, kw_only=True)
-class OpenEVTSensorEntityDescription(SensorEntityDescription._dataclass):
+class OpenEVTSensorEntityDescription(SensorEntityDescription):
     """A class that describes sensor entities for Envertech inverters."""
-
     module: str = field(default="")
-    value_fn: callable = field(default=lambda data: data)
-
+    value_fn: Callable[[dict[str, Any]], Any | None] = field(default=lambda data: data)
 
 MODULE_SENSOR_DESCRIPTIONS: list[OpenEVTSensorEntityDescription] = [
     OpenEVTSensorEntityDescription(
@@ -119,6 +118,30 @@ MODULE_INFO_DESCRIPTIONS: list[OpenEVTSensorEntityDescription] = [
 ]
 
 
+
+
+def _create_inverter_entities(
+    coordinator: OpenEVTCoordinator,
+    inverter_id: str,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Create sensor entities for a single inverter."""
+    device_id = f"openevt-{inverter_id}"
+    device_name = f"OpenEVT {inverter_id}"
+
+    for module_key in (KEY_MODULE1, KEY_MODULE2):
+        for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
+            async_add_entities(
+                [OpenEVTSensorEntity(
+                    coordinator,
+                    desc,
+                    inverter_id,
+                    module_key,
+                    device_id,
+                    device_name,
+                )
+            ])
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -130,39 +153,32 @@ async def async_setup_entry(
     """Set up OpenEVT sensors from config entry."""
     coordinator: OpenEVTCoordinator = entry.runtime_data
 
-    entities: list[OpenEVTSensorEntity] = []
-
-    # Track inverter IDs seen so far (across updates)
+    entities: list[SensorEntity] = []
     known_inverter_ids: set[str] = set()
-
     # Gateway entities
     entities.append(OpenEVTConnectionStatusSensor(coordinator))
     entities.append(OpenEVTInverterIDSensor(coordinator))
+    entities.append(OpenEVTLastContactSensor(coordinator))
+    entities.append(OpenEVTResponseTimeSensor(coordinator))
+    entities.append(OpenEVTRequestRetriesSensor(coordinator))
+    entities.append(OpenEVTUpdateAvailableSensor(coordinator))
 
     # Per-inverter devices (keys are InverterId from coordinator.data)
-    for inverter_id in coordinator.data.keys():
-        device_id = f"openevt-{inverter_id}"
-        device_name = f"OpenEVT {inverter_id}"
-
-        for module_key in (KEY_MODULE1, KEY_MODULE2):
-            for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
-                entities.append(
-                    OpenEVTSensorEntity(
-                        coordinator,
-                        desc,
-                        inverter_id,
-                        module_key,
-                        device_id,
-                        device_name,
-                    )
-                )
+    for inverter_id in coordinator.data:
+        _create_inverter_entities(coordinator, inverter_id, async_add_entities)
 
     async_add_entities(entities)
+
 
     # Access the EntityPlatform to call async_update_list on coordinator changes
     platform = async_add_entities.__self__  # type: ignore[attr-defined]
 
+
+
     def _on_coordinator_update() -> None:
+
+        nonlocal known_inverter_ids
+
         """Handle coordinator data updates — add/remove inverter entities."""
         current_ids = coordinator.inverter_ids
         new_ids = current_ids - known_inverter_ids
@@ -178,24 +194,10 @@ async def async_setup_entry(
             current_ids,
         )
 
-        new_entities: list[OpenEVTSensorEntity] = []
         for inverter_id in new_ids:
-            device_id = f"openevt-{inverter_id}"
-            device_name = f"OpenEVT {inverter_id}"
-            for module_key in (KEY_MODULE1, KEY_MODULE2):
-                for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
-                    new_entities.append(
-                        OpenEVTSensorEntity(
-                            coordinator,
-                            desc,
-                            inverter_id,
-                            module_key,
-                            device_id,
-                            device_name,
-                        )
-                    )
+            _create_inverter_entities(coordinator, inverter_id, async_add_entities)
 
-        stale_entities: list[OpenEVTSensorEntity] = []
+        stale_entities: list[SensorEntity] = []
         for inverter_id in stale_ids:
             device_id = f"openevt-{inverter_id}"
             device_name = f"OpenEVT {inverter_id}"
@@ -212,8 +214,7 @@ async def async_setup_entry(
                         )
                     )
 
-        if new_entities:
-            async_add_entities(new_entities)
+
 
         if stale_entities and platform._async_remove_entities:
             platform._async_remove_entities([e.entity_id for e in stale_entities])
@@ -256,7 +257,7 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
         """Return the native value."""
         inverter_data = self.coordinator.data.get(self._inverter_id, {})
         module_data = inverter_data.get(self._module, {})
-        return self.entity_description.value_fn(module_data)
+        return getattr(self.entity_description, "value_fn", lambda d: d)(module_data)
 
     @property
     def available(self) -> bool:
@@ -265,7 +266,7 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
             return False
         inverter_data = self.coordinator.data.get(self._inverter_id, {})
         module_data = inverter_data.get(self._module, {})
-        value = self.entity_description.value_fn(module_data)
+        value = getattr(self.entity_description, "value_fn", lambda d: d)(module_data)
         return value is not None
 
 
@@ -275,7 +276,7 @@ class OpenEVTConnectionStatusSensor(CoordinatorEntity[OpenEVTCoordinator], Senso
     _attr_has_entity_name = True
     _attr_translation_key = "connection_status"
     _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options = ["connected", "disconnected"]
+    _attr_options: ClassVar[list[str]] = ["connected", "disconnected"]  # type: ignore[misc]
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(self, coordinator: OpenEVTCoordinator) -> None:
@@ -326,6 +327,131 @@ class OpenEVTInverterIDSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntit
         if self.coordinator.data:
             return next(iter(self.coordinator.data.keys()), None)
         return None
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return True
+
+
+class OpenEVTLastContactSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
+    """Last contact timestamp sensor for the gateway device."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "last_contact"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: OpenEVTCoordinator) -> None:
+        """Initialize entity."""
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{GATEWAY_DEVICE_ID}-last-contact"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, GATEWAY_DEVICE_ID)},
+            "name": GATEWAY_DEVICE_NAME,
+            "manufacturer": "OpenEVT",
+            "model": GATEWAY_DEVICE_MODEL,
+        }
+
+    @property
+    def native_value(self) -> datetime | None:
+        """Return last contact time."""
+        return self.coordinator.last_contact
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return True
+
+
+class OpenEVTResponseTimeSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
+    """Response time sensor for the gateway device."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "response_time"
+    _attr_device_class = SensorDeviceClass.DURATION
+    _attr_native_unit_of_measurement = "ms"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: OpenEVTCoordinator) -> None:
+        """Initialize entity."""
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{GATEWAY_DEVICE_ID}-response-time"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, GATEWAY_DEVICE_ID)},
+            "name": GATEWAY_DEVICE_NAME,
+            "manufacturer": "OpenEVT",
+            "model": GATEWAY_DEVICE_MODEL,
+        }
+
+    @property
+    def native_value(self) -> float | None:
+        """Return response time in milliseconds."""
+        return self.coordinator.response_time_ms if self.coordinator.last_update_success else None
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return True
+
+
+class OpenEVTRequestRetriesSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
+    """Request retries sensor for the gateway device."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "request_retries"
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options: ClassVar[list[str]] = ["0", "1", "2", "3", "4+"]  # type: ignore[misc]
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: OpenEVTCoordinator) -> None:
+        """Initialize entity."""
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{GATEWAY_DEVICE_ID}-request-retries"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, GATEWAY_DEVICE_ID)},
+            "name": GATEWAY_DEVICE_NAME,
+            "manufacturer": "OpenEVT",
+            "model": GATEWAY_DEVICE_MODEL,
+        }
+
+    @property
+    def native_value(self) -> str | None:
+        """Return request retry count as string option."""
+        retries = self.coordinator.request_retries if self.coordinator.last_update_success else 0
+        return str(min(retries, 4))
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return True
+
+
+class OpenEVTUpdateAvailableSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
+    """Update available sensor for the gateway device."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "update_available"
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options: ClassVar[list[str]] = ["available", "not available"]  # type: ignore[misc]
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: OpenEVTCoordinator) -> None:
+        """Initialize entity."""
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{GATEWAY_DEVICE_ID}-update-available"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, GATEWAY_DEVICE_ID)},
+            "name": GATEWAY_DEVICE_NAME,
+            "manufacturer": "OpenEVT",
+            "model": GATEWAY_DEVICE_MODEL,
+        }
+
+    @property
+    def native_value(self) -> str | None:
+        """Return update availability status."""
+        # Currently always reports not available since we don't have version checking
+        return "not available"
 
     @property
     def available(self) -> bool:

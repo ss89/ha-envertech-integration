@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import logging
-from datetime import timedelta
+import time
+from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.core import HomeAssistant
@@ -35,11 +36,15 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._urls = urls
         self._known_inverter_ids: set[str] = set()
         self.data: dict[str, Any] = {}
+        self.response_time_ms: float = 0.0
+        self.last_contact: datetime | None = None
+        self.request_retries: int = 0
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data from all inverter endpoints."""
         result: dict[str, Any] = {}
         any_failure = False
+        start_time = time.monotonic()
 
         for url in self._urls:
             try:
@@ -47,15 +52,22 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 parsed = parse_inverter_status(raw_data)
 
                 if parsed:
-                    inverter_id = parsed.get("InverterId")
+                    inverter_id = str(parsed.get("InverterId", ""))
+                    if not inverter_id:
+                        continue
                     result[inverter_id] = parsed
-                    _LOGGER.debug("Fetched data for %s: %s", inverter_id, parsed.get("InverterId"))
+                    _LOGGER.debug("Fetched data for %s", inverter_id)
                 else:
                     _LOGGER.debug("No valid data from %s (inverter may be unavailable)", url)
             except Exception as exc:
                 any_failure = True
                 _LOGGER.debug("Failed to update %s: %s", url, exc)
                 continue
+
+        elapsed_ms = (time.monotonic() - start_time) * 1000
+        self.response_time_ms = round(elapsed_ms, 2)
+        self.last_contact = datetime.now() if result else None
+        self.request_retries = 0 if result else self.request_retries + 1
 
         self.data = result
 
@@ -73,7 +85,7 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self,
         async_add_entities: Any,
         async_remove_entities: Any | None = None,
-    ) -> None:
+    ) -> tuple[set[str], set[str]]:
         """Notify sensor platform of new/removed inverters.
 
         Compares known inverter IDs against current data and returns

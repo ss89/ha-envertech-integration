@@ -6,7 +6,6 @@ import logging
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.core import callback
 
@@ -57,7 +56,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
             return self._show_manual_form()
 
         _LOGGER.info("Config flow: user submitted manual input")
-        return self._async_create_entry_from_manual(user_input)
+        return await self._async_create_entry_from_manual(user_input)
 
     async def async_step_manual(
         self, user_input: dict[str, Any] | None = None
@@ -68,7 +67,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
             return self._show_manual_form()
 
         _LOGGER.info("Config flow: manual step submitted")
-        return self._async_create_entry_from_manual(user_input)
+        return await self._async_create_entry_from_manual(user_input)
 
     async def _async_create_entry_from_addon(
         self, addon_info: dict[str, Any]

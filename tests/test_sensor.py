@@ -1,28 +1,15 @@
 """Tests for the OpenEVT sensor entities."""
 
-from datetime import timedelta
-from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
-from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.components.sensor import SensorStateClass
 
 from custom_components.openevt.const import (
     DOMAIN,
-    FIELD_FIRMWARE_VERSION,
-    FIELD_INPUT_VOLTAGE_DC,
-    FIELD_MODULE_ID,
-    FIELD_OUTPUT_FREQUENCY_AC,
-    FIELD_OUTPUT_POWER_AC,
-    FIELD_OUTPUT_VOLTAGE_AC,
-    FIELD_TEMPERATURE,
-    FIELD_TOTAL_ENERGY,
     GATEWAY_DEVICE_ID,
     KEY_MODULE1,
     KEY_MODULE2,
 )
+from custom_components.openevt.coordinator import OpenEVTCoordinator
 from custom_components.openevt.sensor import (
     MODULE_INFO_DESCRIPTIONS,
     MODULE_SENSOR_DESCRIPTIONS,
@@ -30,9 +17,6 @@ from custom_components.openevt.sensor import (
     OpenEVTInverterIDSensor,
     OpenEVTSensorEntity,
 )
-from custom_components.openevt.coordinator import OpenEVTCoordinator
-from pytest_homeassistant_custom_component.common import MockConfigEntry
-
 
 
 class TestOpenEVTSensorEntity:

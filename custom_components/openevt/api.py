@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any
+from typing import Any, cast
 
-from aiohttp import ClientSession, ClientTimeout
-
+from aiohttp import ClientTimeout
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import SUPERVISOR_ADDON_PORT, SUPERVISOR_ADDON_SLUGS
+from .const import SUPERVISOR_ADDON_SLUGS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -72,7 +71,7 @@ async def check_supervisor_addon(
                     )
                     continue
                 data = await resp.json()
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             _LOGGER.warning(
                 "Supervisor check: failed for slug '%s': %s (%s). "
                 "Ensure HA OS/Container is used and the addon is installed.",
@@ -147,8 +146,8 @@ async def fetch_inverter_status(hass: HomeAssistant, url: str) -> dict[str, Any]
             if resp.status != 200:
                 _LOGGER.debug("Inverter endpoint returned status %d", resp.status)
                 return None
-            return await resp.json()
-    except Exception as exc:  # noqa: BLE001
+            return cast(dict[str, Any], await resp.json())
+    except Exception as exc:
         _LOGGER.debug("Failed to fetch inverter status from %s: %s", url, exc)
         return None
 
