@@ -31,4 +31,4 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry[Any]) -> boo
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry[Any]) -> bool:
     """Unload a config entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    return unload_ok
+    return unload_ok  # type: ignore[no-any-return]

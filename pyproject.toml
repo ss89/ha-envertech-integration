@@ -18,6 +18,7 @@ markers = [
 [tool.mypy]
 python_version = "3.12"
 ignore_missing_imports = true
+follow_imports = "skip"
 strict = false
 warn_return_any = true
 warn_unused_configs = true

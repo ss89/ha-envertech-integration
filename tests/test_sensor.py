@@ -11,8 +11,8 @@ from custom_components.openevt.const import (
 from custom_components.openevt.coordinator import OpenEVTCoordinator
 from custom_components.openevt.sensor import (
     MODULE_SENSOR_DESCRIPTIONS,
-    OpenEVTStatusSensor,
     OpenEVTSensorEntity,
+    OpenEVTStatusSensor,
 )
 
 

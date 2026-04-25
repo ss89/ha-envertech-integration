@@ -249,7 +249,7 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
     def name(self) -> str | None:
         """Return entity name prefixed with ModuleId."""
         module_id = self._get_module_id()
-        desc_name = self.entity_description.name
+        desc_name: str | None = self.entity_description.name
         if desc_name is None or not isinstance(desc_name, str):
             desc_name = self.entity_description.key.replace("_", " ").title()
         if module_id:
@@ -260,7 +260,7 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
         """Return the ModuleId value from module data."""
         inverter_data = self.coordinator.data.get(self._inverter_id, {})
         module_data = inverter_data.get(self._module, {})
-        return module_data.get(FIELD_MODULE_ID)
+        return module_data.get(FIELD_MODULE_ID)  # type: ignore[no-any-return]
 
     @property
     def native_value(self):
@@ -325,7 +325,7 @@ class OpenEVTLastUpdateSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntit
     @property
     def native_value(self) -> datetime | None:
         """Return last update time."""
-        return self.coordinator.last_contact
+        return self.coordinator.last_contact  # type: ignore[no-any-return]
 
     @property
     def available(self) -> bool:

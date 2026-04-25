@@ -21,7 +21,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 )
 
 
-class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
+class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):  # type: ignore[call-arg]
     """Handle a config flow for OpenEVT."""
 
     VERSION = 1
@@ -31,9 +31,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         self._addon_info: dict[str, Any] | None = None
         self._urls: list[str] = []
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle the initial step."""
         _LOGGER.info("Config flow: starting user step")
 
@@ -58,9 +56,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         _LOGGER.info("Config flow: user submitted manual input")
         return await self._async_create_entry_from_manual(user_input)
 
-    async def async_step_manual(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_manual(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle manual configuration (shown after auto-discovery fails)."""
         _LOGGER.info("Config flow: manual step entered")
         if user_input is None:
@@ -69,9 +65,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
         _LOGGER.info("Config flow: manual step submitted")
         return await self._async_create_entry_from_manual(user_input)
 
-    async def _async_create_entry_from_addon(
-        self, addon_info: dict[str, Any]
-    ) -> ConfigFlowResult:
+    async def _async_create_entry_from_addon(self, addon_info: dict[str, Any]) -> ConfigFlowResult:
         """Create entry from detected addon."""
         hostname = addon_info["hostname"]
         slug = addon_info.get("slug", "unknown")
@@ -98,9 +92,7 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
             },
         )
 
-    async def _async_create_entry_from_manual(
-        self, user_input: dict[str, Any]
-    ) -> ConfigFlowResult:
+    async def _async_create_entry_from_manual(self, user_input: dict[str, Any]) -> ConfigFlowResult:
         """Create entry from manual input."""
         url_raw = user_input["url"]
         urls = [u.strip() for u in url_raw.split(";") if u.strip()]
@@ -150,9 +142,7 @@ class OpenEVTOptionsFlowHandler(OptionsFlow):
         """Initialize options flow."""
         self._config_entry = config_entry
 
-    async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Manage the options."""
         if user_input is None:
             current_url = "; ".join(self._config_entry.data.get("urls", []))

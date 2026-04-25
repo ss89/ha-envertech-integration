@@ -20,18 +20,6 @@
         "data_description": {
           "url": "HTTP URL to the /inverter endpoint. For multiple inverters, separate with semicolons."
         }
-      },
-      "options": {
-        "init": {
-          "title": "OpenEVT Options",
-          "description": "Update the inverter endpoint URL(s). For multiple inverters, separate values with semicolons (`;`).",
-          "data": {
-            "url": "Inverter Endpoint URL(s)"
-          },
-          "data_description": {
-            "url": "HTTP URL to the /inverter endpoint. For multiple inverters, separate with semicolons."
-          }
-        }
       }
     },
     "error": {
@@ -44,6 +32,20 @@
       "no_supervisor": "Home Assistant Supervisor is not available. This integration requires HA OS or HA Container. If you are running HA Core, you must configure the URL manually.",
       "addon_not_found": "OpenEVT Supervisor add-on not found. Ensure the OpenEVT addon is installed in Home Assistant Supervisor.",
       "addon_not_started": "OpenEVT Supervisor add-on is not running. Start the addon and try again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT Options",
+        "description": "Update the inverter endpoint URL(s). For multiple inverters, separate values with semicolons (`;`).",
+        "data": {
+          "url": "Inverter Endpoint URL(s)"
+        },
+        "data_description": {
+          "url": "HTTP URL to the /inverter endpoint. For multiple inverters, separate with semicolons."
+        }
+      }
     }
   },
   "entity": {
@@ -93,6 +95,5 @@
         "name": "Firmware Update"
       }
     }
-  },
-  "options": {}
+  }
 }
