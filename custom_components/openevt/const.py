@@ -18,6 +18,15 @@ GATEWAY_DEVICE_ID = "openevt-gateway"
 GATEWAY_DEVICE_NAME = "OpenEVT"
 GATEWAY_DEVICE_MODEL = "OpenEVT Gateway"
 
+
+def get_gateway_device_name(inverter_ids: set[str] | None) -> str:
+    """Return the gateway device name with inverter ID suffix."""
+    if inverter_ids:
+        ids = ", ".join(sorted(inverter_ids))
+        return f"OpenEVT Gateway {ids}"
+    return "OpenEVT Gateway"
+
+
 # Inverter data keys
 KEY_INVERTER_ID = "InverterId"
 KEY_MODULE1 = "Module1"

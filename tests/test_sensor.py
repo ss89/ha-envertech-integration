@@ -10,7 +10,6 @@ from custom_components.openevt.const import (
 )
 from custom_components.openevt.coordinator import OpenEVTCoordinator
 from custom_components.openevt.sensor import (
-    MODULE_INFO_DESCRIPTIONS,
     MODULE_SENSOR_DESCRIPTIONS,
     OpenEVTStatusSensor,
     OpenEVTSensorEntity,
@@ -92,29 +91,7 @@ class TestOpenEVTSensorEntity:
         )
         assert entity.native_value == 29.40
 
-    def test_module_id_value(self, mock_coordinator):
-        """Test module ID sensor value."""
-        entity = OpenEVTSensorEntity(
-            mock_coordinator,
-            MODULE_INFO_DESCRIPTIONS[0],
-            "31583078",
-            KEY_MODULE1,
-            "openevt-31583078",
-            "OpenEVT 31583078",
-        )
-        assert entity.native_value == "M001"
 
-    def test_firmware_version_value(self, mock_coordinator):
-        """Test firmware version sensor value."""
-        entity = OpenEVTSensorEntity(
-            mock_coordinator,
-            MODULE_INFO_DESCRIPTIONS[1],
-            "31583078",
-            KEY_MODULE1,
-            "openevt-31583078",
-            "OpenEVT 31583078",
-        )
-        assert entity.native_value == "1/0"
 
     def test_module2_values(self, mock_coordinator):
         """Test Module2 sensor values."""
@@ -268,18 +245,48 @@ class TestOpenEVTStatusSensor:
     def test_device_info(self, mock_coordinator):
         """Test gateway device info."""
         entity = OpenEVTStatusSensor(mock_coordinator)
-        assert entity.device_info == {
-            "identifiers": {(DOMAIN, GATEWAY_DEVICE_ID)},
-            "name": "OpenEVT",
-            "manufacturer": "OpenEVT",
-            "model": "OpenEVT Gateway",
-        }
+        assert entity.device_info["identifiers"] == {(DOMAIN, GATEWAY_DEVICE_ID)}
+        assert "OpenEVT Gateway" in entity.device_info["name"]
+        assert entity.device_info["manufacturer"] == "OpenEVT"
+        assert entity.device_info["model"] == "OpenEVT Gateway"
 
     def test_unique_id(self, mock_coordinator):
         """Test status unique ID."""
         entity = OpenEVTStatusSensor(mock_coordinator)
         assert entity.unique_id == f"{GATEWAY_DEVICE_ID}-status"
 
+
+
+class TestOpenEVTTotalEnergySensor:
+    """Tests for OpenEVTTotalEnergySensor."""
+
+    def test_total_energy_value(self, mock_coordinator):
+        """Test total energy sums across all modules."""
+        from custom_components.openevt.sensor import OpenEVTTotalEnergySensor
+
+        entity = OpenEVTTotalEnergySensor(mock_coordinator)
+        # Module1: 26.31, Module2: 22.25 = 48.56
+        assert entity.native_value == 48.56
+        assert entity.available is True
+
+    def test_total_energy_no_data(self, hass):
+        """Test total energy returns None when no data."""
+        from custom_components.openevt.sensor import OpenEVTTotalEnergySensor
+
+        coord = OpenEVTCoordinator(hass, ["http://openevt:9090/inverter"])
+        coord.data = {}
+        coord.last_update_success = False
+
+        entity = OpenEVTTotalEnergySensor(coord)
+        assert entity.native_value is None
+        assert entity.available is True
+
+    def test_total_energy_unique_id(self, mock_coordinator):
+        """Test total energy unique ID."""
+        from custom_components.openevt.sensor import OpenEVTTotalEnergySensor
+
+        entity = OpenEVTTotalEnergySensor(mock_coordinator)
+        assert entity.unique_id == f"{GATEWAY_DEVICE_ID}-total-energy"
 
 class TestModuleSensorDescriptions:
     """Tests for sensor description definitions."""
@@ -291,12 +298,6 @@ class TestModuleSensorDescriptions:
             assert desc.translation_key
             assert desc.device_class is not None
 
-    def test_info_sensors_have_diagnostics_category(self):
-        """Test info sensors have DIAGNOSTIC category."""
-        for desc in MODULE_INFO_DESCRIPTIONS:
-            assert desc.key
-            assert desc.translation_key
-            assert desc.entity_category is not None
 
     def test_total_energy_has_total_state_class(self):
         """Test total energy sensor has TOTAL state class."""

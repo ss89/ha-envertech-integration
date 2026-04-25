@@ -81,6 +81,14 @@ class OpenEVTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Return the set of known inverter IDs from the latest data."""
         return set(self.data.keys())
 
+    @property
+    def combined_inverter_ids(self) -> str | None:
+        """Return a comma-separated string of inverter IDs, or None if empty."""
+        ids = self.inverter_ids
+        if not ids:
+            return None
+        return ", ".join(sorted(ids))
+
     def async_update_list(
         self,
         async_add_entities: Any,

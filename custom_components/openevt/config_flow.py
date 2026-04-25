@@ -125,42 +125,6 @@ class OpenEVTConfigFlow(ConfigFlow, domain="openevt"):
             },
         )
 
-    async def async_step_reconfigure(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        """Handle reconfiguration of the integration."""
-        _LOGGER.info("Config flow: starting reconfigure step")
-        if user_input is None:
-            return self._show_reconfigure_form()
-
-        _LOGGER.info("Config flow: reconfigure step submitted")
-        return self._async_update_entry(user_input)
-
-    def _show_reconfigure_form(self, errors: dict[str, str] | None = None) -> ConfigFlowResult:
-        """Show the reconfiguration form."""
-        _LOGGER.debug("Config flow: showing reconfigure form")
-        return self.async_show_form(
-            step_id="reconfigure",
-            data_schema=STEP_USER_DATA_SCHEMA,
-            errors=errors or {},
-        )
-
-    def _async_update_entry(self, user_input: dict[str, Any]) -> ConfigFlowResult:
-        """Update the existing config entry."""
-        url_raw = user_input["url"]
-        urls = [u.strip() for u in url_raw.split(";") if u.strip()]
-
-        _LOGGER.info("Config flow: updating entry (urls=%s)", urls)
-
-        if not urls:
-            _LOGGER.warning("Config flow: empty URL in reconfigure")
-            return self._show_reconfigure_form(errors={"url": "empty_url"})
-
-        return self.async_update_reload_and_abort(
-            self._get_reconfigure_entry(),
-            data_updates={"urls": urls},
-        )
-
     def _show_manual_form(self, errors: dict[str, str] | None = None) -> ConfigFlowResult:
         """Show the manual configuration form."""
         _LOGGER.debug("Config flow: showing manual form")
@@ -223,4 +187,5 @@ class OpenEVTOptionsFlowHandler(OptionsFlow):
             self._config_entry,
             data={"urls": urls},
         )
+        await self.hass.config_entries.async_reload(self._config_entry.entry_id)
         return self.async_create_entry(data={})
