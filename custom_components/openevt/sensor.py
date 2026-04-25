@@ -124,23 +124,28 @@ def _create_inverter_entities(
     coordinator: OpenEVTCoordinator,
     inverter_id: str,
     async_add_entities: AddEntitiesCallback,
+    entity_list: list[OpenEVTSensorEntity] | None = None,
 ) -> None:
     """Create sensor entities for a single inverter."""
     device_id = f"openevt-{inverter_id}"
     device_name = f"OpenEVT {inverter_id}"
 
+    created: list[OpenEVTSensorEntity] = []
     for module_key in (KEY_MODULE1, KEY_MODULE2):
         for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
-            async_add_entities(
-                [OpenEVTSensorEntity(
-                    coordinator,
-                    desc,
-                    inverter_id,
-                    module_key,
-                    device_id,
-                    device_name,
-                )
-            ])
+            entity = OpenEVTSensorEntity(
+                coordinator,
+                desc,
+                inverter_id,
+                module_key,
+                device_id,
+                device_name,
+            )
+            created.append(entity)
+
+    async_add_entities(created)
+    if entity_list is not None:
+        entity_list.extend(created)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -155,6 +160,8 @@ async def async_setup_entry(
 
     entities: list[SensorEntity] = []
     known_inverter_ids: set[str] = set()
+    inverter_entities: dict[str, list[OpenEVTSensorEntity]] = {}
+
     # Gateway entities
     entities.append(OpenEVTConnectionStatusSensor(coordinator))
     entities.append(OpenEVTInverterIDSensor(coordinator))
@@ -165,22 +172,17 @@ async def async_setup_entry(
 
     # Per-inverter devices (keys are InverterId from coordinator.data)
     for inverter_id in coordinator.data:
-        _create_inverter_entities(coordinator, inverter_id, async_add_entities)
+        inverter_entities[inverter_id] = []
+        _create_inverter_entities(
+            coordinator, inverter_id, async_add_entities, inverter_entities[inverter_id]
+        )
 
     async_add_entities(entities)
 
-
-    # Access the EntityPlatform to call async_update_list on coordinator changes
-    platform = async_add_entities.__self__  # type: ignore[attr-defined]
-
-
-
     def _on_coordinator_update() -> None:
-
         nonlocal known_inverter_ids
-
         """Handle coordinator data updates — add/remove inverter entities."""
-        current_ids = coordinator.inverter_ids
+        current_ids = set(coordinator.data.keys())
         new_ids = current_ids - known_inverter_ids
         stale_ids = known_inverter_ids - current_ids
 
@@ -195,29 +197,14 @@ async def async_setup_entry(
         )
 
         for inverter_id in new_ids:
-            _create_inverter_entities(coordinator, inverter_id, async_add_entities)
+            inverter_entities[inverter_id] = []
+            _create_inverter_entities(
+                coordinator, inverter_id, async_add_entities, inverter_entities[inverter_id]
+            )
 
-        stale_entities: list[SensorEntity] = []
         for inverter_id in stale_ids:
-            device_id = f"openevt-{inverter_id}"
-            device_name = f"OpenEVT {inverter_id}"
-            for module_key in (KEY_MODULE1, KEY_MODULE2):
-                for desc in MODULE_SENSOR_DESCRIPTIONS + MODULE_INFO_DESCRIPTIONS:
-                    stale_entities.append(
-                        OpenEVTSensorEntity(
-                            coordinator,
-                            desc,
-                            inverter_id,
-                            module_key,
-                            device_id,
-                            device_name,
-                        )
-                    )
-
-
-
-        if stale_entities and platform._async_remove_entities:
-            platform._async_remove_entities([e.entity_id for e in stale_entities])
+            for entity in inverter_entities.pop(inverter_id, []):
+                hass.add_job(entity.async_remove())
 
         known_inverter_ids.update(new_ids)
         known_inverter_ids -= stale_ids
