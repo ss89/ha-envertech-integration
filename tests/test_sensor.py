@@ -91,8 +91,6 @@ class TestOpenEVTSensorEntity:
         )
         assert entity.native_value == 29.40
 
-
-
     def test_module2_values(self, mock_coordinator):
         """Test Module2 sensor values."""
         for desc in MODULE_SENSOR_DESCRIPTIONS:
@@ -256,37 +254,46 @@ class TestOpenEVTStatusSensor:
         assert entity.unique_id == f"{GATEWAY_DEVICE_ID}-status"
 
 
-
-class TestOpenEVTTotalEnergySensor:
-    """Tests for OpenEVTTotalEnergySensor."""
+class TestOpenEVTInverterTotalEnergySensor:
+    """Tests for OpenEVTInverterTotalEnergySensor (inverter device)."""
 
     def test_total_energy_value(self, mock_coordinator):
-        """Test total energy sums across all modules."""
-        from custom_components.openevt.sensor import OpenEVTTotalEnergySensor
+        """Test total energy sums across both modules of an inverter."""
+        from custom_components.openevt.sensor import OpenEVTInverterTotalEnergySensor
 
-        entity = OpenEVTTotalEnergySensor(mock_coordinator)
+        entity = OpenEVTInverterTotalEnergySensor(mock_coordinator, "31583078", "openevt-31583078", "OpenEVT 31583078")
         # Module1: 26.31, Module2: 22.25 = 48.56
         assert entity.native_value == 48.56
         assert entity.available is True
 
     def test_total_energy_no_data(self, hass):
         """Test total energy returns None when no data."""
-        from custom_components.openevt.sensor import OpenEVTTotalEnergySensor
+        from custom_components.openevt.sensor import OpenEVTInverterTotalEnergySensor
 
         coord = OpenEVTCoordinator(hass, ["http://openevt:9090/inverter"])
         coord.data = {}
         coord.last_update_success = False
 
-        entity = OpenEVTTotalEnergySensor(coord)
+        entity = OpenEVTInverterTotalEnergySensor(coord, "31583078", "openevt-31583078", "OpenEVT 31583078")
         assert entity.native_value is None
-        assert entity.available is True
+        assert entity.available is False
 
     def test_total_energy_unique_id(self, mock_coordinator):
         """Test total energy unique ID."""
-        from custom_components.openevt.sensor import OpenEVTTotalEnergySensor
+        from custom_components.openevt.sensor import OpenEVTInverterTotalEnergySensor
 
-        entity = OpenEVTTotalEnergySensor(mock_coordinator)
-        assert entity.unique_id == f"{GATEWAY_DEVICE_ID}-total-energy"
+        entity = OpenEVTInverterTotalEnergySensor(mock_coordinator, "31583078", "openevt-31583078", "OpenEVT 31583078")
+        assert entity.unique_id == "openevt-31583078-total-energy"
+
+    def test_device_info_is_inverter(self, mock_coordinator):
+        """Test total energy belongs to inverter device, not gateway."""
+        from custom_components.openevt.sensor import OpenEVTInverterTotalEnergySensor
+
+        entity = OpenEVTInverterTotalEnergySensor(mock_coordinator, "31583078", "openevt-31583078", "OpenEVT 31583078")
+        assert entity.device_info["identifiers"] == {(DOMAIN, "openevt-31583078")}
+        assert entity.device_info["manufacturer"] == "Envertech"
+        assert entity.device_info["model"] == "Microinverter"
+
 
 class TestModuleSensorDescriptions:
     """Tests for sensor description definitions."""
@@ -297,7 +304,6 @@ class TestModuleSensorDescriptions:
             assert desc.key
             assert desc.translation_key
             assert desc.device_class is not None
-
 
     def test_total_energy_has_total_state_class(self):
         """Test total energy sensor has TOTAL state class."""

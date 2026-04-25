@@ -32,7 +32,6 @@ from .const import (
     FIELD_TOTAL_ENERGY,
     GATEWAY_DEVICE_ID,
     GATEWAY_DEVICE_MODEL,
-    GATEWAY_DEVICE_NAME,
     KEY_MODULE1,
     KEY_MODULE2,
     get_gateway_device_name,
@@ -137,6 +136,10 @@ def _create_inverter_entities(
             )
             created.append(entity)
 
+    # Add total energy sensor for the inverter
+    total_energy_entity = OpenEVTInverterTotalEnergySensor(coordinator, inverter_id, device_id, device_name)
+    created.append(total_energy_entity)
+
     async_add_entities(created)
     if entity_list is not None:
         entity_list.extend(created)
@@ -162,8 +165,6 @@ async def async_setup_entry(
     entities.append(OpenEVTLastUpdateSensor(coordinator))
     entities.append(OpenEVTResponseTimeSensor(coordinator))
     entities.append(OpenEVTConsecutiveFailuresSensor(coordinator))
-    entities.append(OpenEVTFirmwareUpdateSensor(coordinator))
-    entities.append(OpenEVTTotalEnergySensor(coordinator))
 
     # Per-inverter devices (keys are InverterId from coordinator.data)
     for inverter_id in coordinator.data:
@@ -283,7 +284,7 @@ class OpenEVTStatusSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
     """Connection status sensor for the gateway device."""
 
     _attr_has_entity_name = True
-    _attr_translation_key = "status"
+    _attr_translation_key = "connection_status"
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options: ClassVar[list[str]] = ["connected", "disconnected"]  # type: ignore[misc]
     _attr_entity_category = EntityCategory.DIAGNOSTIC
@@ -362,7 +363,7 @@ class OpenEVTConsecutiveFailuresSensor(CoordinatorEntity[OpenEVTCoordinator], Se
     """Consecutive failed request count sensor for the gateway device."""
 
     _attr_has_entity_name = True
-    _attr_translation_key = "consecutive_failures"
+    _attr_translation_key = "retries"
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options: ClassVar[list[str]] = ["0", "1", "2", "3", "4+"]  # type: ignore[misc]
     _attr_entity_category = EntityCategory.DIAGNOSTIC
@@ -385,61 +386,58 @@ class OpenEVTConsecutiveFailuresSensor(CoordinatorEntity[OpenEVTCoordinator], Se
         return True
 
 
-class OpenEVTFirmwareUpdateSensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
-    """Firmware update availability sensor for the gateway device."""
-
-    _attr_has_entity_name = True
-    _attr_translation_key = "firmware_update"
-    _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options: ClassVar[list[str]] = ["available", "not available"]  # type: ignore[misc]
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, coordinator: OpenEVTCoordinator) -> None:
-        """Initialize entity."""
-        super().__init__(coordinator)
-        self._attr_unique_id = f"{GATEWAY_DEVICE_ID}-firmware-update"
-        self._attr_device_info = _get_gateway_device_info(coordinator)
-
-    @property
-    def native_value(self) -> str | None:
-        """Return firmware update availability status."""
-        # Currently always reports not available since we don't have version checking
-        return "not available"
-
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        return True
-
-
-class OpenEVTTotalEnergySensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
-    """Total energy sensor summing energy from all modules and inverters."""
+class OpenEVTInverterTotalEnergySensor(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
+    """Total energy sensor for an inverter, summing both modules."""
 
     _attr_has_entity_name = True
     _attr_translation_key = "total_energy_combined"
     _attr_device_class = SensorDeviceClass.ENERGY
     _attr_native_unit_of_measurement = "kWh"
     _attr_state_class = SensorStateClass.TOTAL
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
-    def __init__(self, coordinator: OpenEVTCoordinator) -> None:
+    def __init__(
+        self,
+        coordinator: OpenEVTCoordinator,
+        inverter_id: str,
+        device_id: str,
+        device_name: str,
+    ) -> None:
         """Initialize entity."""
         super().__init__(coordinator)
-        self._attr_unique_id = f"{GATEWAY_DEVICE_ID}-total-energy"
-        self._attr_device_info = _get_gateway_device_info(coordinator)
+        self._inverter_id = inverter_id
+        self._attr_unique_id = f"{device_id}-total-energy"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, device_id)},
+            "name": device_name,
+            "manufacturer": "Envertech",
+            "model": "Microinverter",
+        }
+        firmware_version = self._get_first_module_firmware()
+        if firmware_version:
+            self._attr_device_info["sw_version"] = firmware_version
+
+    def _get_first_module_firmware(self) -> str | None:
+        """Return the firmware version from the first available module."""
+        inverter_data = self.coordinator.data.get(self._inverter_id, {})
+        for module_key in (KEY_MODULE1, KEY_MODULE2):
+            module_data = inverter_data.get(module_key, {})
+            fw = module_data.get(FIELD_FIRMWARE_VERSION)
+            if fw:
+                return str(fw)
+        return None
 
     @property
     def native_value(self) -> float | None:
-        """Return total energy summed across all modules and inverters."""
+        """Return total energy summed across both modules of this inverter."""
+        inverter_data = self.coordinator.data.get(self._inverter_id, {})
         total = 0.0
         has_data = False
-        for inverter_data in self.coordinator.data.values():
-            for module_key in (KEY_MODULE1, KEY_MODULE2):
-                module_data = inverter_data.get(module_key, {})
-                energy = module_data.get(FIELD_TOTAL_ENERGY)
-                if energy is not None:
-                    total += energy
-                    has_data = True
+        for module_key in (KEY_MODULE1, KEY_MODULE2):
+            module_data = inverter_data.get(module_key, {})
+            energy = module_data.get(FIELD_TOTAL_ENERGY)
+            if energy is not None:
+                total += energy
+                has_data = True
         if has_data:
             return round(total, 2)
         return None
@@ -447,4 +445,4 @@ class OpenEVTTotalEnergySensor(CoordinatorEntity[OpenEVTCoordinator], SensorEnti
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        return True
+        return self.coordinator.last_update_success and bool(self.coordinator.data.get(self._inverter_id))

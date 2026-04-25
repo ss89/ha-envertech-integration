@@ -72,8 +72,8 @@
       "firmware_version": {
         "name": "Firmware Version"
       },
-      "status": {
-        "name": "Status"
+      "connection_status": {
+        "name": "Connection status"
       },
       "last_update": {
         "name": "Last Update"
@@ -81,14 +81,16 @@
       "response_time": {
         "name": "Response Time"
       },
-      "consecutive_failures": {
-        "name": "Consecutive Failures"
-      },
-      "firmware_update": {
-        "name": "Firmware Update"
+      "retries": {
+        "name": "Retries"
       },
       "total_energy_combined": {
         "name": "Total Energy"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmware Update"
       }
     }
   },
