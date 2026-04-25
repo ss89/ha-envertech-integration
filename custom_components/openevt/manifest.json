@@ -1,4 +1,6 @@
 {
+  "domain": "openevt",
+  "name": "OpenEVT",
   "codeowners": [
     "@ss89"
   ],
@@ -6,10 +8,8 @@
   "dependencies": [
     "hassio"
   ],
-  "domain": "openevt",
   "documentation": "https://github.com/brandon1024/openevt",
   "issue_tracker": "https://github.com/brandon1024/openevt/issues",
   "iot_class": "local_polling",
-  "name": "OpenEVT",
   "version": "1.0.0"
 }

@@ -8,7 +8,7 @@
           "url": "Inverter Endpoint URL(s)"
         },
         "data_description": {
-          "url": "HTTP URL to the /inverter endpoint. The default format is http://<addon-hostname>:9090/inverter (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons."
+          "url": "HTTP URL to the /inverter endpoint. The default format is http://[addon-hostname]:9090/inverter (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons."
         }
       },
       "reconfigure": {
