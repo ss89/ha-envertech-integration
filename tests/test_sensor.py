@@ -134,8 +134,8 @@ class TestOpenEVTSensorEntity:
             "sw_version": "1/0",
         }
 
-    def test_name_has_module_prefix(self, mock_coordinator):
-        """Test entity name is prefixed with ModuleId."""
+    def test_module_sensors_have_translation_key(self, mock_coordinator):
+        """Test module sensor entities have translation_key set."""
         entity = OpenEVTSensorEntity(
             mock_coordinator,
             MODULE_SENSOR_DESCRIPTIONS[0],
@@ -144,10 +144,10 @@ class TestOpenEVTSensorEntity:
             "openevt-31583078",
             "OpenEVT 31583078",
         )
-        assert entity.name == "M001 Dc Voltage"
+        assert entity.entity_description.translation_key == "dc_voltage"
 
-    def test_name_module2_prefix(self, mock_coordinator):
-        """Test entity name uses Module2 ModuleId."""
+    def test_module2_sensors_have_translation_key(self, mock_coordinator):
+        """Test Module2 sensor entities have translation_key set."""
         entity = OpenEVTSensorEntity(
             mock_coordinator,
             MODULE_SENSOR_DESCRIPTIONS[0],
@@ -156,29 +156,19 @@ class TestOpenEVTSensorEntity:
             "openevt-31583078",
             "OpenEVT 31583078",
         )
-        assert entity.name == "M002 Dc Voltage"
+        assert entity.entity_description.translation_key == "dc_voltage"
 
-    def test_name_no_module_id(self, hass):
-        """Test entity name falls back to description when no ModuleId."""
-        coord = OpenEVTCoordinator(hass, ["http://openevt:9090/inverter"])
-        coord.data = {
-            "31583078": {
-                "InverterId": "31583078",
-                "Module1": {"InputVoltageDC": 23.0},
-                "Module2": {},
-            }
-        }
-        coord.last_update_success = True
-
+    def test_has_entity_name_enabled(self, mock_coordinator):
+        """Test that has_entity_name is enabled for translation support."""
         entity = OpenEVTSensorEntity(
-            coord,
+            mock_coordinator,
             MODULE_SENSOR_DESCRIPTIONS[0],
             "31583078",
             KEY_MODULE1,
             "openevt-31583078",
             "OpenEVT 31583078",
         )
-        assert entity.name == "Dc Voltage"
+        assert entity._attr_has_entity_name is True
 
     def test_available_when_connected(self, mock_coordinator):
         """Test entity is available when connected."""

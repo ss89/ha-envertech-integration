@@ -24,7 +24,6 @@ from .const import (
     DOMAIN,
     FIELD_FIRMWARE_VERSION,
     FIELD_INPUT_VOLTAGE_DC,
-    FIELD_MODULE_ID,
     FIELD_OUTPUT_FREQUENCY_AC,
     FIELD_OUTPUT_POWER_AC,
     FIELD_OUTPUT_VOLTAGE_AC,
@@ -244,23 +243,6 @@ class OpenEVTSensorEntity(CoordinatorEntity[OpenEVTCoordinator], SensorEntity):
             if fw:
                 return str(fw)
         return None
-
-    @property
-    def name(self) -> str | None:
-        """Return entity name prefixed with ModuleId."""
-        module_id = self._get_module_id()
-        desc_name: str | None = self.entity_description.name
-        if desc_name is None or not isinstance(desc_name, str):
-            desc_name = self.entity_description.key.replace("_", " ").title()
-        if module_id:
-            return f"{module_id} {desc_name}"
-        return desc_name
-
-    def _get_module_id(self) -> str | None:
-        """Return the ModuleId value from module data."""
-        inverter_data = self.coordinator.data.get(self._inverter_id, {})
-        module_data = inverter_data.get(self._module, {})
-        return module_data.get(FIELD_MODULE_ID)  # type: ignore[no-any-return]
 
     @property
     def native_value(self):
