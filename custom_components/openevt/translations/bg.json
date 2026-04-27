@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Настройка на OpenEVT",
+        "description": "Допълнението OpenEVT не е открито в Home Assistant Supervisor.\n\nВъведете ръчно URL адреса на крайната точка на инвертора. За множество инвертори, разделете стойностите със запетая (`;`).\n\nАко имате инсталирано допълнението OpenEVT, уверете се, че работи и използвате Home Assistant OS или Home Assistant Container.",
+        "data": {
+          "url": "URL адрес на крайната точка на инвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL адрес на крайната точка /inverter. Стандартният формат е http://[име-допълнение]:9090/inverter (напр. http://openevt:9090/inverter). За множество инвертори, разделете със запетая."
+        }
+      },
+      "reconfigure": {
+        "title": "Пренастройка на OpenEVT",
+        "description": "Актуализирайте URL адреса на крайната точка на инвертора. За множество инвертори, разделете стойностите със запетая (`;`)",
+        "data": {
+          "url": "URL адрес на крайната точка на инвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL адрес на крайната точка /inverter. За множество инвертори, разделете със запетая."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL адресът не може да бъде празен.",
+      "cannot_connect": "Невъзможно е свързването с инвертора.",
+      "invalid_data": "Получени невалидни данни от инвертора."
+    },
+    "abort": {
+      "already_configured": "Инверторът вече е настроен.",
+      "no_supervisor": "Home Assistant Supervisor не е наличен. Тази интеграция изисква HA OS или HA Container. Ако използвате HA Core, трябва да настроите URL адреса ръчно.",
+      "addon_not_found": "Допълнението Supervisor OpenEVT не е намерено. Уверете се, че допълнението OpenEVT е инсталирано в Home Assistant Supervisor.",
+      "addon_not_started": "Допълнението Supervisor OpenEVT не работи. Стартирайте допълнението и опитайте отново."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Опции на OpenEVT",
+        "description": "Актуализирайте URL адреса на крайната точка на инвертора. За множество инвертори, разделете стойностите със запетая (`;`)",
+        "data": {
+          "url": "URL адрес на крайната точка на инвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL адрес на крайната точка /inverter. За множество инвертори, разделете със запетая."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Напрежение (DC)"
+      },
+      "ac_voltage": {
+        "name": "Напрежение (AC)"
+      },
+      "power": {
+        "name": "Мощност"
+      },
+      "frequency": {
+        "name": "Честота"
+      },
+      "total_energy": {
+        "name": "Енергия (Общо)"
+      },
+      "temperature": {
+        "name": "Температура"
+      },
+      "module_id": {
+        "name": "ID на модул"
+      },
+      "firmware_version": {
+        "name": "Версия на фърмуера"
+      },
+      "connection_status": {
+        "name": "Статус на връзката"
+      },
+      "last_update": {
+        "name": "Последна актуализация"
+      },
+      "response_time": {
+        "name": "Време за отговор"
+      },
+      "retries": {
+        "name": "Повторни опити"
+      },
+      "total_energy_combined": {
+        "name": "Обща енергия"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Актуализация на фърмуера"
+      }
+    }
+  }
+}

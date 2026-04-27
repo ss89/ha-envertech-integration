@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurer OpenEVT",
+        "description": "L'extension OpenEVT n'a pas été détectée dans Home Assistant Supervisor.\n\nSaisissez manuellement l'URL du point de terminaison de l'onduleur. Pour plusieurs onduleurs, séparez les valeurs avec des points-virgules (`;`).\n\nSi vous avez installé l'extension OpenEVT, assurez-vous qu'elle est en cours d'exécution et que vous utilisez Home Assistant OS ou Home Assistant Container.",
+        "data": {
+          "url": "URL du point de terminaison de l'onduleur"
+        },
+        "data_description": {
+          "url": "URL HTTP du point de terminaison /inverter. Le format par défaut est http://[nom-extension]:9090/inverter (par ex. http://openevt:9090/inverter). Pour plusieurs onduleurs, séparez avec des points-virgules."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurer OpenEVT",
+        "description": "Mettre à jour l'URL du point de terminaison de l'onduleur. Pour plusieurs onduleurs, séparez les valeurs avec des points-virgules (`;`)",
+        "data": {
+          "url": "URL du point de terminaison de l'onduleur"
+        },
+        "data_description": {
+          "url": "URL HTTP du point de terminaison /inverter. Pour plusieurs onduleurs, séparez avec des points-virgules."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "L'URL ne peut pas être vide.",
+      "cannot_connect": "Impossible de se connecter à l'onduleur.",
+      "invalid_data": "Données invalides reçues de l'onduleur."
+    },
+    "abort": {
+      "already_configured": "L'onduleur est déjà configuré.",
+      "no_supervisor": "Home Assistant Supervisor n'est pas disponible. Cette intégration nécessite HA OS ou HA Container. Si vous utilisez HA Core, vous devez configurer l'URL manuellement.",
+      "addon_not_found": "Extension Supervisor OpenEVT introuvable. Assurez-vous que l'extension OpenEVT est installée dans Home Assistant Supervisor.",
+      "addon_not_started": "L'extension Supervisor OpenEVT n'est pas en cours d'exécution. Démarrez l'extension et réessayez."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options OpenEVT",
+        "description": "Mettre à jour l'URL du point de terminaison de l'onduleur. Pour plusieurs onduleurs, séparez les valeurs avec des points-virgules (`;`)",
+        "data": {
+          "url": "URL du point de terminaison de l'onduleur"
+        },
+        "data_description": {
+          "url": "URL HTTP du point de terminaison /inverter. Pour plusieurs onduleurs, séparez avec des points-virgules."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Tension CC"
+      },
+      "ac_voltage": {
+        "name": "Tension CA"
+      },
+      "power": {
+        "name": "Puissance"
+      },
+      "frequency": {
+        "name": "Fréquence"
+      },
+      "total_energy": {
+        "name": "Énergie (Total)"
+      },
+      "temperature": {
+        "name": "Température"
+      },
+      "module_id": {
+        "name": "ID du module"
+      },
+      "firmware_version": {
+        "name": "Version du micrologiciel"
+      },
+      "connection_status": {
+        "name": "État de la connexion"
+      },
+      "last_update": {
+        "name": "Dernière mise à jour"
+      },
+      "response_time": {
+        "name": "Temps de réponse"
+      },
+      "retries": {
+        "name": "Réessais"
+      },
+      "total_energy_combined": {
+        "name": "Énergie totale"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Mise à jour du micrologiciel"
+      }
+    }
+  }
+}

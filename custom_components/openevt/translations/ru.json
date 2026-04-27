@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Настроить OpenEVT",
+        "description": "Дополнение OpenEVT не обнаружено в Home Assistant Supervisor.\n\nВведите URL конечной точки инвертора вручную. Для нескольких инверторов разделяйте значения точкой с запятой (`;`).\n\nЕсли вы установили дополнение OpenEVT, убедитесь, что оно запущено и вы используете Home Assistant OS или Home Assistant Container.",
+        "data": {
+          "url": "URL конечной точки инвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL конечной точки /inverter. Формат по умолчанию: http://[имя-дополнения]:9090/inverter (например, http://openevt:9090/inverter). Для нескольких инверторов разделяйте точкой с запятой."
+        }
+      },
+      "reconfigure": {
+        "title": "Перенастроить OpenEVT",
+        "description": "Обновить URL конечной точки инвертора. Для нескольких инверторов разделяйте значения точкой с запятой (`;`)",
+        "data": {
+          "url": "URL конечной точки инвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL конечной точки /inverter. Для нескольких инверторов разделяйте точкой с запятой."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL не может быть пустым.",
+      "cannot_connect": "Невозможно подключиться к инвертору.",
+      "invalid_data": "Получены недействительные данные от инвертора."
+    },
+    "abort": {
+      "already_configured": "Инвертор уже настроен.",
+      "no_supervisor": "Home Assistant Supervisor недоступен. Для этой интеграции требуется HA OS или HA Container. Если вы используете HA Core, необходимо настроить URL вручную.",
+      "addon_not_found": "Дополнение Supervisor OpenEVT не найдено. Убедитесь, что дополнение OpenEVT установлено в Home Assistant Supervisor.",
+      "addon_not_started": "Дополнение Supervisor OpenEVT не запущено. Запустите дополнение и повторите попытку."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Параметры OpenEVT",
+        "description": "Обновить URL конечной точки инвертора. Для нескольких инверторов разделяйте значения точкой с запятой (`;`)",
+        "data": {
+          "url": "URL конечной точки инвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL конечной точки /inverter. Для нескольких инверторов разделяйте точкой с запятой."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Напряжение пост. тока"
+      },
+      "ac_voltage": {
+        "name": "Напряжение перем. тока"
+      },
+      "power": {
+        "name": "Мощность"
+      },
+      "frequency": {
+        "name": "Частота"
+      },
+      "total_energy": {
+        "name": "Энергия (Всего)"
+      },
+      "temperature": {
+        "name": "Температура"
+      },
+      "module_id": {
+        "name": "ID модуля"
+      },
+      "firmware_version": {
+        "name": "Версия прошивки"
+      },
+      "connection_status": {
+        "name": "Состояние подключения"
+      },
+      "last_update": {
+        "name": "Последнее обновление"
+      },
+      "response_time": {
+        "name": "Время отклика"
+      },
+      "retries": {
+        "name": "Попытки"
+      },
+      "total_energy_combined": {
+        "name": "Общая энергия"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Обновление прошивки"
+      }
+    }
+  }
+}

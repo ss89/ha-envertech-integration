@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nastaviť OpenEVT",
+        "description": "Doplnok OpenEVT nebol zistený v Home Assistant Supervisor.\n\nZadajte manuálne URL koncového bodu meniča. Pre viacero meničov oddelte hodnoty bodkočiarkou (`;`).\n\nAk máte nainštalovaný doplnok OpenEVT, uistite sa, že beží a používate Home Assistant OS alebo Home Assistant Container.",
+        "data": {
+          "url": "URL koncového bodu meniča"
+        },
+        "data_description": {
+          "url": "HTTP URL koncového bodu /inverter. Predvolený formát je http://[nazva-doplnku]:9090/inverter (napr. http://openevt:9090/inverter). Pre viacero meničov oddelte bodkočiarkou."
+        }
+      },
+      "reconfigure": {
+        "title": "Prekonfigurovať OpenEVT",
+        "description": "Aktualizujte URL koncového bodu meniča. Pre viacero meničov oddelte hodnoty bodkočiarkou (`;`)",
+        "data": {
+          "url": "URL koncového bodu meniča"
+        },
+        "data_description": {
+          "url": "HTTP URL koncového bodu /inverter. Pre viacero meničov oddelte bodkočiarkou."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL nemôže byť prázdne.",
+      "cannot_connect": "Nedá sa pripojiť k meniču.",
+      "invalid_data": "Prijaté neplatné údaje z meniča."
+    },
+    "abort": {
+      "already_configured": "Menič je už nakonfigurovaný.",
+      "no_supervisor": "Home Assistant Supervisor nie je k dispozícii. Táto integrácia vyžaduje HA OS alebo HA Container. Ak používate HA Core, musíte URL nakonfigurovať manuálne.",
+      "addon_not_found": "Doplnok Supervisor OpenEVT nebol nájdený. Uistite sa, že doplnok OpenEVT je nainštalovaný v Home Assistant Supervisor.",
+      "addon_not_started": "Doplnok Supervisor OpenEVT nebeží. Spustite doplnok a skúste to znova."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti OpenEVT",
+        "description": "Aktualizujte URL koncového bodu meniča. Pre viacero meničov oddelte hodnoty bodkočiarkou (`;`)",
+        "data": {
+          "url": "URL koncového bodu meniča"
+        },
+        "data_description": {
+          "url": "HTTP URL koncového bodu /inverter. Pre viacero meničov oddelte bodkočiarkou."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Napätie jednosmerného prúdu"
+      },
+      "ac_voltage": {
+        "name": "Napätie striedavého prúdu"
+      },
+      "power": {
+        "name": "Výkon"
+      },
+      "frequency": {
+        "name": "Frekvencia"
+      },
+      "total_energy": {
+        "name": "Energia (Celkom)"
+      },
+      "temperature": {
+        "name": "Teplota"
+      },
+      "module_id": {
+        "name": "ID modulu"
+      },
+      "firmware_version": {
+        "name": "Verzia firmvéru"
+      },
+      "connection_status": {
+        "name": "Stav pripojenia"
+      },
+      "last_update": {
+        "name": "Posledná aktualizácia"
+      },
+      "response_time": {
+        "name": "Čas odozvy"
+      },
+      "retries": {
+        "name": "Pokusy"
+      },
+      "total_energy_combined": {
+        "name": "Celková energia"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Aktualizácia firmvéru"
+      }
+    }
+  }
+}

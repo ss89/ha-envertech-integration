@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Iestatīt OpenEVT",
+        "description": "OpenEVT paplašinājums netika atrasts Home Assistant Supervisor.\n\nManuāli ievadiet maiņstrāvas invertora galapunkta URL. Vairākiem invertoriem atdaliet vērtības ar semikolu (`;`).\n\nJa jums ir instalēts OpenEVT paplašinājums, pārliecinieties, ka tas darbojas un ka izmantojat Home Assistant OS vai Home Assistant Container.",
+        "data": {
+          "url": "Maiņstrāvas invertora galapunkta URL"
+        },
+        "data_description": {
+          "url": "HTTP URL uz /inverter galapunktu. Noklusējuma formāts ir http://[paplasinasanas_vards]:9090/inverter (piem., http://openevt:9090/inverter). Vairākiem invertoriem atdaliet ar semikolu."
+        }
+      },
+      "reconfigure": {
+        "title": "Pārestatīt OpenEVT",
+        "description": "Atjauniniet maiņstrāvas invertora galapunkta URL. Vairākiem invertoriem atdaliet vērtības ar semikolu (`;`)",
+        "data": {
+          "url": "Maiņstrāvas invertora galapunkta URL"
+        },
+        "data_description": {
+          "url": "HTTP URL uz /inverter galapunktu. Vairākiem invertoriem atdaliet ar semikolu."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL nevar būt tukšs.",
+      "cannot_connect": "Nevar izveidot savienojumu ar maiņstrāvas invertoru.",
+      "invalid_data": "Saņemti nederīgi dati no maiņstrāvas invertora."
+    },
+    "abort": {
+      "already_configured": "Maiņstrāvas invertors jau ir iestatīts.",
+      "no_supervisor": "Home Assistant Supervisor nav pieejams. Šai integrācijai ir nepieciešams HA OS vai HA Container. Ja izmantojat HA Core, jums ir jāiestata URL manuāli.",
+      "addon_not_found": "OpenEVT Supervisor paplašinājums nav atrasts. Pārliecinieties, ka OpenEVT paplašinājums ir instalēts Home Assistant Supervisor.",
+      "addon_not_started": "OpenEVT Supervisor paplašinājums nedarbojas. Palaidiet paplašinājumu un mēģiniet vēlreiz."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT opcijas",
+        "description": "Atjauniniet maiņstrāvas invertora galapunkta URL. Vairākiem invertoriem atdaliet vērtības ar semikolu (`;`)",
+        "data": {
+          "url": "Maiņstrāvas invertora galapunkta URL"
+        },
+        "data_description": {
+          "url": "HTTP URL uz /inverter galapunktu. Vairākiem invertoriem atdaliet ar semikolu."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Spriegums (līdzstrāva)"
+      },
+      "ac_voltage": {
+        "name": "Spriegums (maiņstrāva)"
+      },
+      "power": {
+        "name": "Jauda"
+      },
+      "frequency": {
+        "name": "Frekvence"
+      },
+      "total_energy": {
+        "name": "Enerģija (Kopā)"
+      },
+      "temperature": {
+        "name": "Temperatūra"
+      },
+      "module_id": {
+        "name": "Moduļa ID"
+      },
+      "firmware_version": {
+        "name": "Firmware versija"
+      },
+      "connection_status": {
+        "name": "Savienojuma statuss"
+      },
+      "last_update": {
+        "name": "Pēdējais atjauninājums"
+      },
+      "response_time": {
+        "name": "Atbildes laiks"
+      },
+      "retries": {
+        "name": "Mēģinājumi"
+      },
+      "total_energy_combined": {
+        "name": "Kopējā enerģija"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmware atjauninājums"
+      }
+    }
+  }
+}

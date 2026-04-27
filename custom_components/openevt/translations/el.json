@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Ρύθμιση OpenEVT",
+        "description": "Η προσθήκη OpenEVT δεν ανιχνεύτηκε στο Home Assistant Supervisor.\n\nΕισάγετε χειροκίνητα το URL του σημείου τέλους του αντιστροφέα. Για πολλαπλούς αντιστροφείς, διαχωρίστε τις τιμές με ερωτηματικό (`;`).\n\nΑν έχετε εγκαταστήσει την προσθήκη OpenEVT, βεβαιωθείτε ότι εκτελείται και ότι χρησιμοποιείτε Home Assistant OS ή Home Assistant Container.",
+        "data": {
+          "url": "URL σημείου τέλους αντιστροφέα"
+        },
+        "data_description": {
+          "url": "HTTP URL του σημείου τέλους /inverter. Η προεπιλεγμένη μορφή είναι http://[όνομα-προσθήκης]:9090/inverter (π.χ. http://openevt:9090/inverter). Για πολλαπλούς αντιστροφείς, διαχωρίστε με ερωτηματικό."
+        }
+      },
+      "reconfigure": {
+        "title": "Επαναρύθμιση OpenEVT",
+        "description": "Ενημερώστε το URL του σημείου τέλους του αντιστροφέα. Για πολλαπλούς αντιστροφείς, διαχωρίστε τις τιμές με ερωτηματικό (`;`)",
+        "data": {
+          "url": "URL σημείου τέλους αντιστροφέα"
+        },
+        "data_description": {
+          "url": "HTTP URL του σημείου τέλους /inverter. Για πολλαπλούς αντιστροφείς, διαχωρίστε με ερωτηματικό."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "Το URL δεν μπορεί να είναι κενό.",
+      "cannot_connect": "Αδυναμία σύνδεσης με τον αντιστροφέα.",
+      "invalid_data": "Λήψη μη έγκυρων δεδομένων από τον αντιστροφέα."
+    },
+    "abort": {
+      "already_configured": "Ο αντιστροφέας έχει ήδη ρυθμιστεί.",
+      "no_supervisor": "Το Home Assistant Supervisor δεν είναι διαθέσιμο. Αυτή η ενσωμάτωση απαιτεί HA OS ή HA Container. Αν εκτελείτε HA Core, πρέπει να ρυθμίσετε το URL χειροκίνητα.",
+      "addon_not_found": "Η προσθήκη Supervisor OpenEVT δεν βρέθηκε. Βεβαιωθείτε ότι η προσθήκη OpenEVT είναι εγκατεστημένη στο Home Assistant Supervisor.",
+      "addon_not_started": "Η προσθήκη Supervisor OpenEVT δεν εκτελείται. Εκτελέστε την προσθήκη και δοκιμάστε ξανά."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Επιλογές OpenEVT",
+        "description": "Ενημερώστε το URL του σημείου τέλους του αντιστροφέα. Για πολλαπλούς αντιστροφείς, διαχωρίστε τις τιμές με ερωτηματικό (`;`)",
+        "data": {
+          "url": "URL σημείου τέλους αντιστροφέα"
+        },
+        "data_description": {
+          "url": "HTTP URL του σημείου τέλους /inverter. Για πολλαπλούς αντιστροφείς, διαχωρίστε με ερωτηματικό."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Τάση DC"
+      },
+      "ac_voltage": {
+        "name": "Τάση AC"
+      },
+      "power": {
+        "name": "Ισχύς"
+      },
+      "frequency": {
+        "name": "Συχνότητα"
+      },
+      "total_energy": {
+        "name": "Ενέργεια (Σύνολο)"
+      },
+      "temperature": {
+        "name": "Θερμοκρασία"
+      },
+      "module_id": {
+        "name": "Αναγνωριστικό μονάδας"
+      },
+      "firmware_version": {
+        "name": "Έκδοση firmware"
+      },
+      "connection_status": {
+        "name": "Κατάσταση σύνδεσης"
+      },
+      "last_update": {
+        "name": "Τελευταία ενημέρωση"
+      },
+      "response_time": {
+        "name": "Χρόνος απόκρισης"
+      },
+      "retries": {
+        "name": "Επαναπροσπαθείες"
+      },
+      "total_energy_combined": {
+        "name": "Συνολική ενέργεια"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Ενημέρωση firmware"
+      }
+    }
+  }
+}

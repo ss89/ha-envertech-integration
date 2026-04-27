@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OpenEVT configureren",
+        "description": "De OpenEVT-addon is niet gedetecteerd in Home Assistant Supervisor.\n\nVoer de URL van het omvormer-eindpunt handmatig in. Scheid meerdere waarden met puntkomma's (`;`).\n\nAls u de OpenEVT-addon hebt geïnstalleerd, zorg er dan voor dat deze draait en dat u Home Assistant OS of Home Assistant Container gebruikt.",
+        "data": {
+          "url": "URL van het omvormer-eindpunt"
+        },
+        "data_description": {
+          "url": "HTTP-URL naar het /inverter-eindpunt. Het standaardformaat is http://[addon-hostnaam]:9090/inverter (bijv. http://openevt:9090/inverter). Scheid meerdere omvormers met puntkomma's."
+        }
+      },
+      "reconfigure": {
+        "title": "OpenEVT herconfigureren",
+        "description": "URL van het omvormer-eindpunt bijwerken. Scheid meerdere waarden met puntkomma's (`;`)",
+        "data": {
+          "url": "URL van het omvormer-eindpunt"
+        },
+        "data_description": {
+          "url": "HTTP-URL naar het /inverter-eindpunt. Scheid meerdere omvormers met puntkomma's."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "De URL mag niet leeg zijn.",
+      "cannot_connect": "Kan geen verbinding maken met de omvormer.",
+      "invalid_data": "Ongeldige gegevens ontvangen van omvormer."
+    },
+    "abort": {
+      "already_configured": "De omvormer is al geconfigureerd.",
+      "no_supervisor": "Home Assistant Supervisor is niet beschikbaar. Deze integratie vereist HA OS of HA Container. Als u HA Core gebruikt, moet u de URL handmatig configureren.",
+      "addon_not_found": "OpenEVT Supervisor-addon niet gevonden. Zorg ervoor dat de OpenEVT-addon is geïnstalleerd in Home Assistant Supervisor.",
+      "addon_not_started": "De OpenEVT Supervisor-addon draait niet. Start de addon en probeer het opnieuw."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT-opties",
+        "description": "URL van het omvormer-eindpunt bijwerken. Scheid meerdere waarden met puntkomma's (`;`)",
+        "data": {
+          "url": "URL van het omvormer-eindpunt"
+        },
+        "data_description": {
+          "url": "HTTP-URL naar het /inverter-eindpunt. Scheid meerdere omvormers met puntkomma's."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Gelijkspanning"
+      },
+      "ac_voltage": {
+        "name": "Wisselspanning"
+      },
+      "power": {
+        "name": "Vermogen"
+      },
+      "frequency": {
+        "name": "Frequentie"
+      },
+      "total_energy": {
+        "name": "Energie (Totaal)"
+      },
+      "temperature": {
+        "name": "Temperatuur"
+      },
+      "module_id": {
+        "name": "Module-ID"
+      },
+      "firmware_version": {
+        "name": "Firmwareversie"
+      },
+      "connection_status": {
+        "name": "Verbindingsstatus"
+      },
+      "last_update": {
+        "name": "Laatste update"
+      },
+      "response_time": {
+        "name": "Reactietijd"
+      },
+      "retries": {
+        "name": "Pogingen"
+      },
+      "total_energy_combined": {
+        "name": "Totale energie"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmware-update"
+      }
+    }
+  }
+}

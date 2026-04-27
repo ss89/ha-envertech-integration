@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfigurera OpenEVT",
+        "description": "OpenEVT-tillägget hittades inte i Home Assistant Supervisor.\n\nAnge manuellt URL:en till omriktarens slutpunkt. För flera omriktare, separera värden med semikolon (`;`).\n\nOm du har installerat OpenEVT-tillägget, se till att det körs och att du använder Home Assistant OS eller Home Assistant Container.",
+        "data": {
+          "url": "URL:en till omriktarens slutpunkt"
+        },
+        "data_description": {
+          "url": "HTTP-URL:en till /inverter-slutpunkten. Standardformatet är http://[tilläggsnamn]:9090/inverter (t.ex. http://openevt:9090/inverter). För flera omriktare, separera med semikolon."
+        }
+      },
+      "reconfigure": {
+        "title": "Omkonfigurera OpenEVT",
+        "description": "Uppdatera URL:en till omriktarens slutpunkt. För flera omriktare, separera värden med semikolon (`;`)",
+        "data": {
+          "url": "URL:en till omriktarens slutpunkt"
+        },
+        "data_description": {
+          "url": "HTTP-URL:en till /inverter-slutpunkten. För flera omriktare, separera med semikolon."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL:en får inte vara tom.",
+      "cannot_connect": "Kan inte ansluta till omriktaren.",
+      "invalid_data": "Ogiltiga data mottagna från omriktaren."
+    },
+    "abort": {
+      "already_configured": "Omriktaren är redan konfigurerad.",
+      "no_supervisor": "Home Assistant Supervisor är inte tillgänglig. Denna integration kräver HA OS eller HA Container. Om du använder HA Core måste du konfigurera URL:en manuellt.",
+      "addon_not_found": "OpenEVT Supervisor-tillägg hittades inte. Se till att OpenEVT-tillägget är installerat i Home Assistant Supervisor.",
+      "addon_not_started": "OpenEVT Supervisor-tillägget körs inte. Starta tillägget och försök igen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT-alternativ",
+        "description": "Uppdatera URL:en till omriktarens slutpunkt. För flera omriktare, separera värden med semikolon (`;`)",
+        "data": {
+          "url": "URL:en till omriktarens slutpunkt"
+        },
+        "data_description": {
+          "url": "HTTP-URL:en till /inverter-slutpunkten. För flera omriktare, separera med semikolon."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Likspänning"
+      },
+      "ac_voltage": {
+        "name": "Växelspanning"
+      },
+      "power": {
+        "name": "Effekt"
+      },
+      "frequency": {
+        "name": "Frekvens"
+      },
+      "total_energy": {
+        "name": "Energi (Totalt)"
+      },
+      "temperature": {
+        "name": "Temperatur"
+      },
+      "module_id": {
+        "name": "Modul-ID"
+      },
+      "firmware_version": {
+        "name": "Firmwareversion"
+      },
+      "connection_status": {
+        "name": "Anslutningsstatus"
+      },
+      "last_update": {
+        "name": "Senaste uppdatering"
+      },
+      "response_time": {
+        "name": "Svarstid"
+      },
+      "retries": {
+        "name": "Försök"
+      },
+      "total_energy_combined": {
+        "name": "Total energi"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmwareuppdatering"
+      }
+    }
+  }
+}

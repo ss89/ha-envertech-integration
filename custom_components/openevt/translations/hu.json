@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OpenEVT konfigurálása",
+        "description": "Az OpenEVT kiegészítő nem észlelhető a Home Assistant Supervisorban.\n\nAdja meg manuálisan az inverter végpont URL-címét. Több inverter esetén pontosvesszővel (`;`) elválasztva adja meg az értékeket.\n\nHa telepítette az OpenEVT kiegészítőt, győződjön meg róla, hogy fut, és Home Assistant OS vagy Home Assistant Container használ.",
+        "data": {
+          "url": "Inverter végpont URL-címe"
+        },
+        "data_description": {
+          "url": "HTTP URL-cím a /inverter végponthoz. Az alapértelmezett formátum: http://[kiegészítő-neve]:9090/inverter (pl. http://openevt:9090/inverter). Több inverter esetén pontosvesszővel elválasztva."
+        }
+      },
+      "reconfigure": {
+        "title": "OpenEVT újrakonfigurálása",
+        "description": "Frissítse az inverter végpont URL-címét. Több inverter esetén pontosvesszővel (`;`) elválasztva adja meg az értékeket.",
+        "data": {
+          "url": "Inverter végpont URL-címe"
+        },
+        "data_description": {
+          "url": "HTTP URL-cím a /inverter végponthoz. Több inverter esetén pontosvesszővel elválasztva."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "Az URL-cím nem lehet üres.",
+      "cannot_connect": "Nem lehet csatlakozni az inverterhez.",
+      "invalid_data": "Érvénytelen adatok érkeztek az inverterről."
+    },
+    "abort": {
+      "already_configured": "Az inverter már konfigurálva van.",
+      "no_supervisor": "A Home Assistant Supervisor nem elérhető. Ez az integráció HA OS vagy HA Container szükséges. Ha HA Core-t használ, manuálisan kell konfigurálnia az URL-címet.",
+      "addon_not_found": "OpenEVT Supervisor kiegészítő nem található. Győződjön meg róla, hogy az OpenEVT kiegészítő telepítve van a Home Assistant Supervisorban.",
+      "addon_not_started": "Az OpenEVT Supervisor kiegészítő nem fut. Indítsa el a kiegészítőt, és próbálja újra."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT beállítások",
+        "description": "Frissítse az inverter végpont URL-címét. Több inverter esetén pontosvesszővel (`;`) elválasztva adja meg az értékeket.",
+        "data": {
+          "url": "Inverter végpont URL-címe"
+        },
+        "data_description": {
+          "url": "HTTP URL-cím a /inverter végponthoz. Több inverter esetén pontosvesszővel elválasztva."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Feszültség (DC)"
+      },
+      "ac_voltage": {
+        "name": "Feszültség (AC)"
+      },
+      "power": {
+        "name": "Teljesítmény"
+      },
+      "frequency": {
+        "name": "Frekvencia"
+      },
+      "total_energy": {
+        "name": "Energia (Összesen)"
+      },
+      "temperature": {
+        "name": "Hőmérséklet"
+      },
+      "module_id": {
+        "name": "Modul azonosító"
+      },
+      "firmware_version": {
+        "name": "Vezérlőszoftver verzió"
+      },
+      "connection_status": {
+        "name": "Csatlakozás állapota"
+      },
+      "last_update": {
+        "name": "Utolsó frissítés"
+      },
+      "response_time": {
+        "name": "Válaszidő"
+      },
+      "retries": {
+        "name": "Újrapróbálkozások"
+      },
+      "total_energy_combined": {
+        "name": "Összes energia"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Vezérlőszoftver frissítés"
+      }
+    }
+  }
+}

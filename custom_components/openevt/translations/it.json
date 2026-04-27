@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configura OpenEVT",
+        "description": "L'addon OpenEVT non è stato rilevato in Home Assistant Supervisor.\n\nInserisci manualmente l'URL dell'endpoint dell'inverter. Per più inverter, separa i valori con punti e virgola (`;`).\n\nSe hai installato l'addon OpenEVT, assicurati che sia in esecuzione e che tu stia utilizzando Home Assistant OS o Home Assistant Container.",
+        "data": {
+          "url": "URL dell'endpoint dell'inverter"
+        },
+        "data_description": {
+          "url": "URL HTTP dell'endpoint /inverter. Il formato predefinito è http://[nome-addon]:9090/inverter (es. http://openevt:9090/inverter). Per più inverter, separa con punti e virgola."
+        }
+      },
+      "reconfigure": {
+        "title": "Riconfigura OpenEVT",
+        "description": "Aggiorna l'URL dell'endpoint dell'inverter. Per più inverter, separa i valori con punti e virgola (`;`)",
+        "data": {
+          "url": "URL dell'endpoint dell'inverter"
+        },
+        "data_description": {
+          "url": "URL HTTP dell'endpoint /inverter. Per più inverter, separa con punti e virgola."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "L'URL non può essere vuoto.",
+      "cannot_connect": "Impossibile connettersi all'inverter.",
+      "invalid_data": "Dati non validi ricevuti dall'inverter."
+    },
+    "abort": {
+      "already_configured": "L'inverter è già configurato.",
+      "no_supervisor": "Home Assistant Supervisor non è disponibile. Questa integrazione richiede HA OS o HA Container. Se stai utilizzando HA Core, devi configurare l'URL manualmente.",
+      "addon_not_found": "Addon Supervisor OpenEVT non trovato. Assicurati che l'addon OpenEVT sia installato in Home Assistant Supervisor.",
+      "addon_not_started": "L'addon Supervisor OpenEVT non è in esecuzione. Avvia l'addon e riprova."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni OpenEVT",
+        "description": "Aggiorna l'URL dell'endpoint dell'inverter. Per più inverter, separa i valori con punti e virgola (`;`)",
+        "data": {
+          "url": "URL dell'endpoint dell'inverter"
+        },
+        "data_description": {
+          "url": "URL HTTP dell'endpoint /inverter. Per più inverter, separa con punti e virgola."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Tensione CC"
+      },
+      "ac_voltage": {
+        "name": "Tensione CA"
+      },
+      "power": {
+        "name": "Potenza"
+      },
+      "frequency": {
+        "name": "Frequenza"
+      },
+      "total_energy": {
+        "name": "Energia (Totale)"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "module_id": {
+        "name": "ID modulo"
+      },
+      "firmware_version": {
+        "name": "Versione firmware"
+      },
+      "connection_status": {
+        "name": "Stato connessione"
+      },
+      "last_update": {
+        "name": "Ultimo aggiornamento"
+      },
+      "response_time": {
+        "name": "Tempo di risposta"
+      },
+      "retries": {
+        "name": "Ritenti"
+      },
+      "total_energy_combined": {
+        "name": "Energia totale"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Aggiornamento firmware"
+      }
+    }
+  }
+}

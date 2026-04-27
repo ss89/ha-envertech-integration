@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nustatyti OpenEVT",
+        "description": "OpenEVT priedas nerasta Home Assistant Supervisor.\n\nĮveskite keitiklio galinio taško URL rankiniu būdu. Keliems keitikliams atskirkite reikšmes kabliataškiu (`;`).\n\nJei įdiegėte OpenEVT priedą, įsitikinkite, kad jis veikia ir naudojate Home Assistant OS arba Home Assistant Container.",
+        "data": {
+          "url": "Keitiklio galinio taško URL"
+        },
+        "data_description": {
+          "url": "/inverter galinio taško HTTP URL. Numatytasis formatas yra http://[priedo_vardas]:9090/inverter (pvz., http://openevt:9090/inverter). Keliems keitikliams atskirkite kabliataškiu."
+        }
+      },
+      "reconfigure": {
+        "title": "Per nustatyti OpenEVT",
+        "description": "Atnaujinkite keitiklio galinio taško URL. Keliems keitikliams atskirkite reikšmes kabliataškiu (`;`)",
+        "data": {
+          "url": "Keitiklio galinio taško URL"
+        },
+        "data_description": {
+          "url": "/inverter galinio taško HTTP URL. Keliems keitikliams atskirkite kabliataškiu."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL negali būti tuščias.",
+      "cannot_connect": "Nepavyksta prisijungti prie keitiklio.",
+      "invalid_data": "Gauti neteisingi duomenys iš keitiklio."
+    },
+    "abort": {
+      "already_configured": "Keitiklis jau nustatytas.",
+      "no_supervisor": "Home Assistant Supervisor neprieinamas. Šiai integracijai reikalingas HA OS arba HA Container. Jei naudojate HA Core, URL turi nustatyti rankiniu būdu.",
+      "addon_not_found": "OpenEVT Supervisor priedas nerastas. Įsitikinkite, kad OpenEVT priedas įdiegtas Home Assistant Supervisor.",
+      "addon_not_started": "OpenEVT Supervisor priedas neveikia. Paleiskite priedą ir bandykite dar kartą."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT parinktys",
+        "description": "Atnaujinkite keitiklio galinio taško URL. Keliems keitikliams atskirkite reikšmes kabliataškiu (`;`)",
+        "data": {
+          "url": "Keitiklio galinio taško URL"
+        },
+        "data_description": {
+          "url": "/inverter galinio taško HTTP URL. Keliems keitikliams atskirkite kabliataškiu."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Įtampa (lyginė srovė)"
+      },
+      "ac_voltage": {
+        "name": "Įtampa (kintamoji srovė)"
+      },
+      "power": {
+        "name": "Galia"
+      },
+      "frequency": {
+        "name": "Dažnis"
+      },
+      "total_energy": {
+        "name": "Energija (Iš viso)"
+      },
+      "temperature": {
+        "name": "Temperatūra"
+      },
+      "module_id": {
+        "name": "Mato vieneto ID"
+      },
+      "firmware_version": {
+        "name": "Programinės įrangos versija"
+      },
+      "connection_status": {
+        "name": "Jungties būsena"
+      },
+      "last_update": {
+        "name": "Paskutinis atnaujinimas"
+      },
+      "response_time": {
+        "name": "Atsakymo laikas"
+      },
+      "retries": {
+        "name": "Bandymai"
+      },
+      "total_energy_combined": {
+        "name": "Bendra energija"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Programinės įrangos atnaujinimas"
+      }
+    }
+  }
+}

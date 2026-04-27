@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguracja OpenEVT",
+        "description": "Dodatek OpenEVT nie został wykryty w Home Assistant Supervisor.\n\nWprowadź ręcznie adres URL punktu końcowego falownika. Dla wielu falowników oddziel wartości średnikiem (`;`).\n\nJeśli masz zainstalowany dodatek OpenEVT, upewnij się, że działa i używasz Home Assistant OS lub Home Assistant Container.",
+        "data": {
+          "url": "Adres URL punktu końcowego falownika"
+        },
+        "data_description": {
+          "url": "Adres HTTP punktu końcowego /inverter. Domyślny format to http://[nazwa-dodatku]:9090/inverter (np. http://openevt:9090/inverter). Dla wielu falowników oddziel średnikiem."
+        }
+      },
+      "reconfigure": {
+        "title": "Ponowna konfiguracja OpenEVT",
+        "description": "Aktualizuj adres URL punktu końcowego falownika. Dla wielu falowników oddziel wartości średnikiem (`;`)",
+        "data": {
+          "url": "Adres URL punktu końcowego falownika"
+        },
+        "data_description": {
+          "url": "Adres HTTP punktu końcowego /inverter. Dla wielu falowników oddziel średnikiem."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "Adres URL nie może być pusty.",
+      "cannot_connect": "Nie można połączyć się z falownikiem.",
+      "invalid_data": "Otrzymano nieprawidłowe dane od falownika."
+    },
+    "abort": {
+      "already_configured": "Falownik jest już skonfigurowany.",
+      "no_supervisor": "Home Assistant Supervisor jest niedostępny. Ta integracja wymaga HA OS lub HA Container. Jeśli używasz HA Core, musisz skonfigurować adres URL ręcznie.",
+      "addon_not_found": "Nie znaleziono dodatku Supervisor OpenEVT. Upewnij się, że dodatek OpenEVT jest zainstalowany w Home Assistant Supervisor.",
+      "addon_not_started": "Dodatek Supervisor OpenEVT nie działa. Uruchom dodatek i spróbuj ponownie."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcje OpenEVT",
+        "description": "Aktualizuj adres URL punktu końcowego falownika. Dla wielu falowników oddziel wartości średnikiem (`;`)",
+        "data": {
+          "url": "Adres URL punktu końcowego falownika"
+        },
+        "data_description": {
+          "url": "Adres HTTP punktu końcowego /inverter. Dla wielu falowników oddziel średnikiem."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Napięcie prądu stałego"
+      },
+      "ac_voltage": {
+        "name": "Napięcie prądu przemiennego"
+      },
+      "power": {
+        "name": "Moc"
+      },
+      "frequency": {
+        "name": "Częstotliwość"
+      },
+      "total_energy": {
+        "name": "Energia (Całkowita)"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "module_id": {
+        "name": "ID modułu"
+      },
+      "firmware_version": {
+        "name": "Wersja oprogramowania"
+      },
+      "connection_status": {
+        "name": "Stan połączenia"
+      },
+      "last_update": {
+        "name": "Ostatnia aktualizacja"
+      },
+      "response_time": {
+        "name": "Czas odpowiedzi"
+      },
+      "retries": {
+        "name": "Próby"
+      },
+      "total_energy_combined": {
+        "name": "Energia całkowita"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Aktualizacja oprogramowania"
+      }
+    }
+  }
+}

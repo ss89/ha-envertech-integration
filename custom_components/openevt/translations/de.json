@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OpenEVT konfigurieren",
+        "description": "Das OpenEVT-Add-on wurde im Home Assistant Supervisor nicht erkannt.\n\nGeben Sie die Inverter-Endpunkt-URL(s) manuell ein. Bei mehreren Wechselrichtern Werte durch Semikolons trennen (`;`).\n\nWenn Sie das OpenEVT-Add-on installiert haben, stellen Sie sicher, dass es läuft und Sie Home Assistant OS oder Home Assistant Container verwenden.",
+        "data": {
+          "url": "Wechselrichter-Endpunkt-URL(s)"
+        },
+        "data_description": {
+          "url": "HTTP-URL zum /inverter-Endpunkt. Das Standardformat ist http://[addon-hostname]:9090/inverter (z.B. http://openevt:9090/inverter). Bei mehreren Wechselrichtern mit Semikolons trennen."
+        }
+      },
+      "reconfigure": {
+        "title": "OpenEVT neu konfigurieren",
+        "description": "Wechselrichter-Endpunkt-URL(s) aktualisieren. Bei mehreren Wechselrichtern Werte durch Semikolons trennen (`;`)",
+        "data": {
+          "url": "Wechselrichter-Endpunkt-URL(s)"
+        },
+        "data_description": {
+          "url": "HTTP-URL zum /inverter-Endpunkt. Bei mehreren Wechselrichtern mit Semikolons trennen."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL darf nicht leer sein.",
+      "cannot_connect": "Verbindung zum Wechselrichter nicht möglich.",
+      "invalid_data": "Ungültige Daten vom Wechselrichter empfangen."
+    },
+    "abort": {
+      "already_configured": "Wechselrichter ist bereits konfiguriert.",
+      "no_supervisor": "Home Assistant Supervisor ist nicht verfügbar. Diese Integration erfordert HA OS oder HA Container. Wenn Sie HA Core ausführen, müssen Sie die URL manuell konfigurieren.",
+      "addon_not_found": "OpenEVT Supervisor-Add-on nicht gefunden. Stellen Sie sicher, dass das OpenEVT-Add-on im Home Assistant Supervisor installiert ist.",
+      "addon_not_started": "OpenEVT Supervisor-Add-on läuft nicht. Starten Sie das Add-on und versuchen Sie es erneut."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT-Optionen",
+        "description": "Wechselrichter-Endpunkt-URL(s) aktualisieren. Bei mehreren Wechselrichtern Werte durch Semikolons trennen (`;`)",
+        "data": {
+          "url": "Wechselrichter-Endpunkt-URL(s)"
+        },
+        "data_description": {
+          "url": "HTTP-URL zum /inverter-Endpunkt. Bei mehreren Wechselrichtern mit Semikolons trennen."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Gleichspannung"
+      },
+      "ac_voltage": {
+        "name": "Wechselspannung"
+      },
+      "power": {
+        "name": "Leistung"
+      },
+      "frequency": {
+        "name": "Frequenz"
+      },
+      "total_energy": {
+        "name": "Energie (Gesamt)"
+      },
+      "temperature": {
+        "name": "Temperatur"
+      },
+      "module_id": {
+        "name": "Modul-ID"
+      },
+      "firmware_version": {
+        "name": "Firmware-Version"
+      },
+      "connection_status": {
+        "name": "Verbindungsstatus"
+      },
+      "last_update": {
+        "name": "Letzte Aktualisierung"
+      },
+      "response_time": {
+        "name": "Antwortzeit"
+      },
+      "retries": {
+        "name": "Versuche"
+      },
+      "total_energy_combined": {
+        "name": "Gesamtenergie"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmware-Aktualisierung"
+      }
+    }
+  }
+}

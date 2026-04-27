@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Seadista OpenEVT",
+        "description": "OpenEVT'i lisa ei avastatud Home Assistant Supervisors.\n\nSisesta inverteri lõkepunkti URL-manuaalselt. Mitme inverteri korral eraldage väärtused semikooloniga (`;`).\n\nKui olete OpenEVT'i lisapaki installinud, veenduge, et see töötab ja et kasutate Home Assistant OS-i või Home Assistant Containerit.",
+        "data": {
+          "url": "Inverteri lõkepunkti URL"
+        },
+        "data_description": {
+          "url": "/inverteri lõkepunkti HTTP URL. Vaikekuju on http://[lisa_nimi]:9090/inverter (nt http://openevt:9090/inverter). Mitme inverteri korral eraldage semikooloniga."
+        }
+      },
+      "reconfigure": {
+        "title": "Uuesti seadista OpenEVT",
+        "description": "Uuendage inverteri lõkepunkti URL-i. Mitme inverteri korral eraldage väärtused semikooloniga (`;`)",
+        "data": {
+          "url": "Inverteri lõkepunkti URL"
+        },
+        "data_description": {
+          "url": "/inverteri lõkepunkti HTTP URL. Mitme inverteri korral eraldage semikooloniga."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL ei saa olla tühi.",
+      "cannot_connect": "Inverteriga ei saa ühendust.",
+      "invalid_data": "Inverterilt saadi vigased andmed."
+    },
+    "abort": {
+      "already_configured": "Inverter on juba seadistatud.",
+      "no_supervisor": "Home Assistant Supervisor ei ole saadaval. See integratsioon nõuab HA OS-i või HA Containerit. Kui kasutate HA Core'i, peate URL-i seadistama käsitsi.",
+      "addon_not_found": "OpenEVT Supervisor'i lisapaki ei leitud. Veenduge, et OpenEVT'i lisapakk on installitud Home Assistant Supersivori.",
+      "addon_not_started": "OpenEVT Supervisor'i lisapakk ei tööta. Käivitage lisapakk ja proovige uuesti."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT'i valikud",
+        "description": "Uuendage inverteri lõkepunkti URL-i. Mitme inverteri korral eraldage väärtused semikooloniga (`;`)",
+        "data": {
+          "url": "Inverteri lõkepunkti URL"
+        },
+        "data_description": {
+          "url": "/inverteri lõkepunkti HTTP URL. Mitme inverteri korral eraldage semikooloniga."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Pinge (alalisvool)"
+      },
+      "ac_voltage": {
+        "name": "Pinge (vahelduvvool)"
+      },
+      "power": {
+        "name": "Võimsus"
+      },
+      "frequency": {
+        "name": "Sagedus"
+      },
+      "total_energy": {
+        "name": "Energia (Kokku)"
+      },
+      "temperature": {
+        "name": "Temperatuur"
+      },
+      "module_id": {
+        "name": "Mooduli ID"
+      },
+      "firmware_version": {
+        "name": "Firmware'i versioon"
+      },
+      "connection_status": {
+        "name": "Ühenduse olek"
+      },
+      "last_update": {
+        "name": "Viimane uuendus"
+      },
+      "response_time": {
+        "name": "Vastusaeg"
+      },
+      "retries": {
+        "name": "Katsete arv"
+      },
+      "total_energy_combined": {
+        "name": "Koguenergia"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmware'i uuendus"
+      }
+    }
+  }
+}

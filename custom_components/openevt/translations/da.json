@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfigurer OpenEVT",
+        "description": "OpenEVT-tilføjelsen blev ikke opdaget i Home Assistant Supervisor.\n\nIndtast URL'en til inverterens slutpunkt manuelt. For flere invertere, separer værdier med semikolon (`;`).\n\nHvis du har installeret OpenEVT-tilføjelsen, sørg for, at den kører, og at du bruger Home Assistant OS eller Home Assistant Container.",
+        "data": {
+          "url": "URL til inverterens slutpunkt"
+        },
+        "data_description": {
+          "url": "HTTP-URL til /inverter-slutpunktet. Standardformatet er http://[tilfoejelsesnavn]:9090/inverter (f.eks. http://openevt:9090/inverter). For flere invertere, separer med semikolon."
+        }
+      },
+      "reconfigure": {
+        "title": "Omkonfigurer OpenEVT",
+        "description": "Opdater URL'en til inverterens slutpunkt. For flere invertere, separer værdier med semikolon (`;`)",
+        "data": {
+          "url": "URL til inverterens slutpunkt"
+        },
+        "data_description": {
+          "url": "HTTP-URL til /inverter-slutpunktet. For flere invertere, separer med semikolon."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL'en kan ikke være tom.",
+      "cannot_connect": "Kan ikke forbinde til inverteren.",
+      "invalid_data": "Ugyldige data modtaget fra inverteren."
+    },
+    "abort": {
+      "already_configured": "Inverteren er allerede konfigureret.",
+      "no_supervisor": "Home Assistant Supervisor er ikke tilgængelig. Denne integration kræver HA OS eller HA Container. Hvis du bruger HA Core, skal du konfigurere URL'en manuelt.",
+      "addon_not_found": "OpenEVT Supervisor-tilføjelse ikke fundet. Sørg for, at OpenEVT-tilføjelsen er installeret i Home Assistant Supervisor.",
+      "addon_not_started": "OpenEVT Supervisor-tilføjelse kører ikke. Start tilføjelsen og prøv igen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT-indstillinger",
+        "description": "Opdater URL'en til inverterens slutpunkt. For flere invertere, separer værdier med semikolon (`;`)",
+        "data": {
+          "url": "URL til inverterens slutpunkt"
+        },
+        "data_description": {
+          "url": "HTTP-URL til /inverter-slutpunktet. For flere invertere, separer med semikolon."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Liggespænding"
+      },
+      "ac_voltage": {
+        "name": "Vekselspænding"
+      },
+      "power": {
+        "name": "Effekt"
+      },
+      "frequency": {
+        "name": "Frekvens"
+      },
+      "total_energy": {
+        "name": "Energi (Totalt)"
+      },
+      "temperature": {
+        "name": "Temperatur"
+      },
+      "module_id": {
+        "name": "Modul-ID"
+      },
+      "firmware_version": {
+        "name": "Firmware-version"
+      },
+      "connection_status": {
+        "name": "Forbindelsesstatus"
+      },
+      "last_update": {
+        "name": "Seneste opdatering"
+      },
+      "response_time": {
+        "name": "Svartid"
+      },
+      "retries": {
+        "name": "Forsøg"
+      },
+      "total_energy_combined": {
+        "name": "Total energi"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmware-opdatering"
+      }
+    }
+  }
+}

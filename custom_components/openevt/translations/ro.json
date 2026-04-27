@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurare OpenEVT",
+        "description": "Extensia OpenEVT nu a fost detectată în Home Assistant Supervisor.\n\nIntroduceți manual URL-ul punctului final al invertorului. Pentru mai multe invertoare, separați valorile cu punct și virgulă (`;`).\n\nDacă aveți instalată extensia OpenEVT, asigurați-vă că rulează și utilizați Home Assistant OS sau Home Assistant Container.",
+        "data": {
+          "url": "URL-ul punctului final al invertorului"
+        },
+        "data_description": {
+          "url": "URL-ul HTTP al punctului final /inverter. Formatul implicit este http://[nume-extensie]:9090/inverter (de ex. http://openevt:9090/inverter). Pentru mai multe invertoare, separați cu punct și virgulă."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurare OpenEVT",
+        "description": "Actualizați URL-ul punctului final al invertorului. Pentru mai multe invertoare, separați valorile cu punct și virgulă (`;`)",
+        "data": {
+          "url": "URL-ul punctului final al invertorului"
+        },
+        "data_description": {
+          "url": "URL-ul HTTP al punctului final /inverter. Pentru mai multe invertoare, separați cu punct și virgulă."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL-ul nu poate fi gol.",
+      "cannot_connect": "Nu se poate conecta la invertor.",
+      "invalid_data": "Date invalide primite de la invertor."
+    },
+    "abort": {
+      "already_configured": "Invertorul este deja configurat.",
+      "no_supervisor": "Home Assistant Supervisor nu este disponibil. Această integrare necesită HA OS sau HA Container. Dacă utilizați HA Core, trebuie să configurați URL-ul manual.",
+      "addon_not_found": "Extensia Supervisor OpenEVT nu a fost găsită. Asigurați-vă că extensia OpenEVT este instalată în Home Assistant Supervisor.",
+      "addon_not_started": "Extensia Supervisor OpenEVT nu rulează. Porniți extensia și încercați din nou."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opțiuni OpenEVT",
+        "description": "Actualizați URL-ul punctului final al invertorului. Pentru mai multe invertoare, separați valorile cu punct și virgulă (`;`)",
+        "data": {
+          "url": "URL-ul punctului final al invertorului"
+        },
+        "data_description": {
+          "url": "URL-ul HTTP al punctului final /inverter. Pentru mai multe invertoare, separați cu punct și virgulă."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Tensiune CC"
+      },
+      "ac_voltage": {
+        "name": "Tensiune CA"
+      },
+      "power": {
+        "name": "Putere"
+      },
+      "frequency": {
+        "name": "Frecvență"
+      },
+      "total_energy": {
+        "name": "Energie (Total)"
+      },
+      "temperature": {
+        "name": "Temperatură"
+      },
+      "module_id": {
+        "name": "ID modul"
+      },
+      "firmware_version": {
+        "name": "Versiune firmware"
+      },
+      "connection_status": {
+        "name": "Stare conexiune"
+      },
+      "last_update": {
+        "name": "Ultima actualizare"
+      },
+      "response_time": {
+        "name": "Timp de răspuns"
+      },
+      "retries": {
+        "name": "Reîncercări"
+      },
+      "total_energy_combined": {
+        "name": "Energie totală"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Actualizare firmware"
+      }
+    }
+  }
+}

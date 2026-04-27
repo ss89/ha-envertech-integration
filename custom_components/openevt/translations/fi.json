@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Määritä OpenEVT",
+        "description": "OpenEVT-lisäosaa ei havaittu Home Assistant Supervisorissa.\n\nSyötä inverterin päätepisteen URL-osoite manuaalisesti. Useammille invertereille erottele arvot puolipisteellä (`;`).\n\nJos olet asentanut OpenEVT-lisäosan, varmista, että se on käynnissä ja että käytät Home Assistant OS:ää tai Home Assistant Containeria.",
+        "data": {
+          "url": "Inverterin päätepisteen URL-osoite"
+        },
+        "data_description": {
+          "url": "/inverter-päätepisteen HTTP-URL-osoite. Oletusmuoto on http://[lisäosan_nimi]:9090/inverter (esim. http://openevt:9090/inverter). Useammille invertereille erottele puolipisteellä."
+        }
+      },
+      "reconfigure": {
+        "title": "Uudelleenmääritä OpenEVT",
+        "description": "Päivitä inverterin päätepisteen URL-osoite. Useammille invertereille erottele arvot puolipisteellä (`;`)",
+        "data": {
+          "url": "Inverterin päätepisteen URL-osoite"
+        },
+        "data_description": {
+          "url": "/inverter-päätepisteen HTTP-URL-osoite. Useammille invertereille erottele puolipisteellä."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL-osoite ei voi olla tyhjä.",
+      "cannot_connect": "Inverteriin ei saada yhteyttä.",
+      "invalid_data": "Inverteriltä vastaanotettu virheellinen data."
+    },
+    "abort": {
+      "already_configured": "Inverteri on jo määritetty.",
+      "no_supervisor": "Home Assistant Supervisor ei ole saatavilla. Tämä integraatio vaatii HA OS:n tai HA Containerin. Jos käytät HA Corea, sinun on määritettävä URL-osoite manuaalisesti.",
+      "addon_not_found": "OpenEVT Supervisor -lisäosaa ei löydetty. Varmista, että OpenEVT-lisäosa on asennettu Home Assistant Supersivoriin.",
+      "addon_not_started": "OpenEVT Supervisor -lisäosa ei ole käynnissä. Käynnistä lisäosa ja yritä uudelleen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT-asetukset",
+        "description": "Päivitä inverterin päätepisteen URL-osoite. Useammille invertereille erottele arvot puolipisteellä (`;`)",
+        "data": {
+          "url": "Inverterin päätepisteen URL-osoite"
+        },
+        "data_description": {
+          "url": "/inverter-päätepisteen HTTP-URL-osoite. Useammille invertereille erottele puolipisteellä."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Tasajännite"
+      },
+      "ac_voltage": {
+        "name": "Vaihtojännite"
+      },
+      "power": {
+        "name": "Teho"
+      },
+      "frequency": {
+        "name": "Taajuus"
+      },
+      "total_energy": {
+        "name": "Energia (Yhteensä)"
+      },
+      "temperature": {
+        "name": "Lämpötila"
+      },
+      "module_id": {
+        "name": "Moduulin ID"
+      },
+      "firmware_version": {
+        "name": "Laiteohjelmistoversio"
+      },
+      "connection_status": {
+        "name": "Yhteyden tila"
+      },
+      "last_update": {
+        "name": "Viimeisin päivitys"
+      },
+      "response_time": {
+        "name": "Vastausaika"
+      },
+      "retries": {
+        "name": "Yritykset"
+      },
+      "total_energy_combined": {
+        "name": "Yhteinen energia"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Laiteohjelmiston päivitys"
+      }
+    }
+  }
+}

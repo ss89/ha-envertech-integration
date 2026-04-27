@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguracija OpenEVT",
+        "description": "Dodatek OpenEVT ni bil zaznan v Home Assistant Supervisor.\n\nRočno vnesite URL naslov končne točke inverterja. Za več inverterjev ločite vrednosti s podpičjem (`;`).\n\nČe imate nameščen dodatek OpenEVT, se prepričajte, da deluje in uporabljate Home Assistant OS ali Home Assistant Container.",
+        "data": {
+          "url": "URL naslov končne točke inverterja"
+        },
+        "data_description": {
+          "url": "HTTP URL naslov končne točke /inverter. Privzeti format je http://[ime-dodatka]:9090/inverter (npr. http://openevt:9090/inverter). Za več inverterjev ločite s podpičjem."
+        }
+      },
+      "reconfigure": {
+        "title": "Ponovna konfiguracija OpenEVT",
+        "description": "Posodobite URL naslov končne točke inverterja. Za več inverterjev ločite vrednosti s podpičjem (`;`)",
+        "data": {
+          "url": "URL naslov končne točke inverterja"
+        },
+        "data_description": {
+          "url": "HTTP URL naslov končne točke /inverter. Za več inverterjev ločite s podpičjem."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL naslov ne more biti prazen.",
+      "cannot_connect": "Ni mogoče vzpostaviti povezave z inverterjem.",
+      "invalid_data": "Prejete neveljavne podatke od inverterja."
+    },
+    "abort": {
+      "already_configured": "Inverter je že konfiguriran.",
+      "no_supervisor": "Home Assistant Supervisor ni na voljo. Ta integracija zahteva HA OS ali HA Container. Če uporabljate HA Core, morate URL naslov konfigurirati ročno.",
+      "addon_not_found": "Dodatek Supervisor OpenEVT ni bil najden. Prepričajte se, da je dodatek OpenEVT nameščen v Home Assistant Supervisor.",
+      "addon_not_started": "Dodatek Supervisor OpenEVT ne deluje. Zaženite dodatek in poskusite znova."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti OpenEVT",
+        "description": "Posodobite URL naslov končne točke inverterja. Za več inverterjev ločite vrednosti s podpičjem (`;`)",
+        "data": {
+          "url": "URL naslov končne točke inverterja"
+        },
+        "data_description": {
+          "url": "HTTP URL naslov končne točke /inverter. Za več inverterjev ločite s podpičjem."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Enosmerna napetost"
+      },
+      "ac_voltage": {
+        "name": "Izmenična napetost"
+      },
+      "power": {
+        "name": "Moč"
+      },
+      "frequency": {
+        "name": "Frekvenca"
+      },
+      "total_energy": {
+        "name": "Energija (Skupaj)"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "module_id": {
+        "name": "ID modula"
+      },
+      "firmware_version": {
+        "name": "Različica programske opreme"
+      },
+      "connection_status": {
+        "name": "Stanje povezave"
+      },
+      "last_update": {
+        "name": "Zadnja posodobitev"
+      },
+      "response_time": {
+        "name": "Čas odziva"
+      },
+      "retries": {
+        "name": "Poskusi"
+      },
+      "total_energy_combined": {
+        "name": "Skupna energija"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Posodobitev programske opreme"
+      }
+    }
+  }
+}

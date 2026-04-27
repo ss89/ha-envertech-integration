@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nastavit OpenEVT",
+        "description": "Doplňěk OpenEVT nebyl detekován v Home Assistant Supervisor.\n\nZadejte ručně URL koncového bodu měniče. Pro více měničů oddělte hodnoty středníkem (`;`).\n\nPokud máte nainstalovaný doplněk OpenEVT, ujistěte se, že běží a používáte Home Assistant OS nebo Home Assistant Container.",
+        "data": {
+          "url": "URL koncového bodu měniče"
+        },
+        "data_description": {
+          "url": "HTTP URL koncového bodu /inverter. Výchozí formát je http://[název-doplňku]:9090/inverter (např. http://openevt:9090/inverter). Pro více měničů oddělte středníkem."
+        }
+      },
+      "reconfigure": {
+        "title": "Přenastavit OpenEVT",
+        "description": "Aktualizujte URL koncového bodu měniče. Pro více měničů oddělte hodnoty středníkem (`;`)",
+        "data": {
+          "url": "URL koncového bodu měniče"
+        },
+        "data_description": {
+          "url": "HTTP URL koncového bodu /inverter. Pro více měničů oddělte středníkem."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL nemůže být prázdné.",
+      "cannot_connect": "Nelze se připojit k měniči.",
+      "invalid_data": "Přijata neplatná data z měniče."
+    },
+    "abort": {
+      "already_configured": "Měnič je již nastaven.",
+      "no_supervisor": "Home Assistant Supervisor není k dispozici. Tato integrace vyžaduje HA OS nebo HA Container. Pokud používáte HA Core, musíte URL nastavit ručně.",
+      "addon_not_found": "Doplňek Supervisor OpenEVT nebyl nalezen. Ujistěte se, že doplněk OpenEVT je nainstalován v Home Assistant Supervisor.",
+      "addon_not_started": "Doplňek Supervisor OpenEVT neběží. Spusťte doplněk a zkuste to znovu."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti OpenEVT",
+        "description": "Aktualizujte URL koncového bodu měniče. Pro více měničů oddělte hodnoty středníkem (`;`)",
+        "data": {
+          "url": "URL koncového bodu měniče"
+        },
+        "data_description": {
+          "url": "HTTP URL koncového bodu /inverter. Pro více měničů oddělte středníkem."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Napětí stejnosměrného proudu"
+      },
+      "ac_voltage": {
+        "name": "Napětí střídavého proudu"
+      },
+      "power": {
+        "name": "Výkon"
+      },
+      "frequency": {
+        "name": "Frekvence"
+      },
+      "total_energy": {
+        "name": "Energie (Celkem)"
+      },
+      "temperature": {
+        "name": "Teplota"
+      },
+      "module_id": {
+        "name": "ID modulu"
+      },
+      "firmware_version": {
+        "name": "Verze firmwaru"
+      },
+      "connection_status": {
+        "name": "Stav připojení"
+      },
+      "last_update": {
+        "name": "Poslední aktualizace"
+      },
+      "response_time": {
+        "name": "Doba odezvy"
+      },
+      "retries": {
+        "name": "Pokusy"
+      },
+      "total_energy_combined": {
+        "name": "Celková energie"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Aktualizace firmwaru"
+      }
+    }
+  }
+}

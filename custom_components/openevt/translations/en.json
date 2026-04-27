@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure OpenEVT",
+        "description": "The OpenEVT addon was not detected in Home Assistant Supervisor.\n\nEnter the inverter endpoint URL(s) manually. For multiple inverters, separate values with semicolons (`;`).\n\nIf you have the OpenEVT addon installed, ensure it is running and you are using Home Assistant OS or Home Assistant Container.",
+        "data": {
+          "url": "Inverter Endpoint URL(s)"
+        },
+        "data_description": {
+          "url": "HTTP URL to the /inverter endpoint. The default format is http://[addon-hostname]:9090/inverter (e.g. http://openevt:9090/inverter). For multiple inverters, separate with semicolons."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure OpenEVT",
+        "description": "Update the inverter endpoint URL(s). For multiple inverters, separate values with semicolons (`;`)",
+        "data": {
+          "url": "Inverter Endpoint URL(s)"
+        },
+        "data_description": {
+          "url": "HTTP URL to the /inverter endpoint. For multiple inverters, separate with semicolons."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL cannot be empty.",
+      "cannot_connect": "Cannot connect to the inverter.",
+      "invalid_data": "Invalid data received from inverter."
+    },
+    "abort": {
+      "already_configured": "Inverter is already configured.",
+      "no_supervisor": "Home Assistant Supervisor is not available. This integration requires HA OS or HA Container. If you are running HA Core, you must configure the URL manually.",
+      "addon_not_found": "OpenEVT Supervisor add-on not found. Ensure the OpenEVT addon is installed in Home Assistant Supervisor.",
+      "addon_not_started": "OpenEVT Supervisor add-on is not running. Start the addon and try again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "OpenEVT Options",
+        "description": "Update the inverter endpoint URL(s). For multiple inverters, separate values with semicolons (`;`)",
+        "data": {
+          "url": "Inverter Endpoint URL(s)"
+        },
+        "data_description": {
+          "url": "HTTP URL to the /inverter endpoint. For multiple inverters, separate with semicolons."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "DC Voltage"
+      },
+      "ac_voltage": {
+        "name": "AC Voltage"
+      },
+      "power": {
+        "name": "Power"
+      },
+      "frequency": {
+        "name": "Frequency"
+      },
+      "total_energy": {
+        "name": "Energy (Total)"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "module_id": {
+        "name": "Module ID"
+      },
+      "firmware_version": {
+        "name": "Firmware Version"
+      },
+      "connection_status": {
+        "name": "Connection status"
+      },
+      "last_update": {
+        "name": "Last Update"
+      },
+      "response_time": {
+        "name": "Response Time"
+      },
+      "retries": {
+        "name": "Retries"
+      },
+      "total_energy_combined": {
+        "name": "Total Energy"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Firmware Update"
+      }
+    }
+  }
+}

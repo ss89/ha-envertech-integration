@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar OpenEVT",
+        "description": "El addon OpenEVT no se ha detectado en Home Assistant Supervisor.\n\nIntroduzca manualmente la URL del punto final del inversor. Para varios inversores, separe los valores con puntos y comas (`;`).\n\nSi tiene instalado el addon OpenEVT, asegúrese de que está en ejecución y que está usando Home Assistant OS o Home Assistant Container.",
+        "data": {
+          "url": "URL del punto final del inversor"
+        },
+        "data_description": {
+          "url": "URL HTTP del punto final /inverter. El formato por defecto es http://[nombre-addon]:9090/inverter (ej. http://openevt:9090/inverter). Para varios inversores, separe con puntos y comas."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurar OpenEVT",
+        "description": "Actualice la URL del punto final del inversor. Para varios inversores, separe los valores con puntos y comas (`;`)",
+        "data": {
+          "url": "URL del punto final del inversor"
+        },
+        "data_description": {
+          "url": "URL HTTP del punto final /inverter. Para varios inversores, separe con puntos y comas."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "La URL no puede estar vacía.",
+      "cannot_connect": "No se puede conectar al inversor.",
+      "invalid_data": "Datos no válidos recibidos del inversor."
+    },
+    "abort": {
+      "already_configured": "El inversor ya está configurado.",
+      "no_supervisor": "Home Assistant Supervisor no está disponible. Esta integración requiere HA OS o HA Container. Si está usando HA Core, debe configurar la URL manualmente.",
+      "addon_not_found": "Addon Supervisor OpenEVT no encontrado. Asegúrese de que el addon OpenEVT está instalado en Home Assistant Supervisor.",
+      "addon_not_started": "El addon Supervisor OpenEVT no está en ejecución. Inicie el addon y vuelva a intentarlo."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones OpenEVT",
+        "description": "Actualice la URL del punto final del inversor. Para varios inversores, separe los valores con puntos y comas (`;`)",
+        "data": {
+          "url": "URL del punto final del inversor"
+        },
+        "data_description": {
+          "url": "URL HTTP del punto final /inverter. Para varios inversores, separe con puntos y comas."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Voltaje CC"
+      },
+      "ac_voltage": {
+        "name": "Voltaje CA"
+      },
+      "power": {
+        "name": "Potencia"
+      },
+      "frequency": {
+        "name": "Frecuencia"
+      },
+      "total_energy": {
+        "name": "Energía (Total)"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "module_id": {
+        "name": "ID del módulo"
+      },
+      "firmware_version": {
+        "name": "Versión del firmware"
+      },
+      "connection_status": {
+        "name": "Estado de conexión"
+      },
+      "last_update": {
+        "name": "Última actualización"
+      },
+      "response_time": {
+        "name": "Tiempo de respuesta"
+      },
+      "retries": {
+        "name": "Reintentos"
+      },
+      "total_energy_combined": {
+        "name": "Energía total"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Actualización de firmware"
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Налаштувати OpenEVT",
+        "description": "Додаток OpenEVT не виявлено в Home Assistant Supervisor.\n\nВведіть URL кінцевої точки інвертора вручну. Для кількох інверторів розділяйте значення крапкою з комою (`;`).\n\nЯкщо ви встановили додаток OpenEVT, переконайтеся, що він запущений і ви використовуєте Home Assistant OS або Home Assistant Container.",
+        "data": {
+          "url": "URL кінцевої точки інвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL кінцевої точки /inverter. Типовий формат: http://[ім'я-додатка]:9090/inverter (наприклад, http://openevt:9090/inverter). Для кількох інверторів розділяйте крапкою з комою."
+        }
+      },
+      "reconfigure": {
+        "title": "Переналаштувати OpenEVT",
+        "description": "Оновити URL кінцевої точки інвертора. Для кількох інверторів розділяйте значення крапкою з комою (`;`)",
+        "data": {
+          "url": "URL кінцевої точки інвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL кінцевої точки /inverter. Для кількох інверторів розділяйте крапкою з комою."
+        }
+      }
+    },
+    "error": {
+      "empty_url": "URL не може бути порожнім.",
+      "cannot_connect": "Не вдається підключитися до інвертора.",
+      "invalid_data": "Отримано недійсні дані від інвертора."
+    },
+    "abort": {
+      "already_configured": "Інвертор уже налаштовано.",
+      "no_supervisor": "Home Assistant Supervisor недоступний. Для цієї інтеграції потрібен HA OS або HA Container. Якщо ви використовуєте HA Core, необхідно налаштувати URL вручну.",
+      "addon_not_found": "Додаток Supervisor OpenEVT не знайдено. Переконайтеся, що додаток OpenEVT встановлено в Home Assistant Supervisor.",
+      "addon_not_started": "Додаток Supervisor OpenEVT не запущено. Запустіть додаток і повторіть спробу."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Параметри OpenEVT",
+        "description": "Оновити URL кінцевої точки інвертора. Для кількох інверторів розділяйте значення крапкою з комою (`;`)",
+        "data": {
+          "url": "URL кінцевої точки інвертора"
+        },
+        "data_description": {
+          "url": "HTTP URL кінцевої точки /inverter. Для кількох інверторів розділяйте крапкою з комою."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "dc_voltage": {
+        "name": "Напруга пост. струму"
+      },
+      "ac_voltage": {
+        "name": "Напруга перем. струму"
+      },
+      "power": {
+        "name": "Потужність"
+      },
+      "frequency": {
+        "name": "Частота"
+      },
+      "total_energy": {
+        "name": "Енергія (Всього)"
+      },
+      "temperature": {
+        "name": "Температура"
+      },
+      "module_id": {
+        "name": "ID модуля"
+      },
+      "firmware_version": {
+        "name": "Версія прошивки"
+      },
+      "connection_status": {
+        "name": "Стан підключення"
+      },
+      "last_update": {
+        "name": "Останнє оновлення"
+      },
+      "response_time": {
+        "name": "Час відповіді"
+      },
+      "retries": {
+        "name": "Спроби"
+      },
+      "total_energy_combined": {
+        "name": "Загальна енергія"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Оновлення прошивки"
+      }
+    }
+  }
+}
