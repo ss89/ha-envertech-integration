@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Kopējā enerģija"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Firmware atjauninājums"
-      }
     }
   }
 }

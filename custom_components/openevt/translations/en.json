@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Total Energy"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Firmware Update"
-      }
     }
   }
 }

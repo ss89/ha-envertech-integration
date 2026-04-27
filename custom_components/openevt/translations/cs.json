@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Celková energie"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Aktualizace firmwaru"
-      }
     }
   }
 }

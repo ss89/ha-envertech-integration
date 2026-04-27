@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Συνολική ενέργεια"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Ενημέρωση firmware"
-      }
     }
   }
 }

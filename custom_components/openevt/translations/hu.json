@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Összes energia"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Vezérlőszoftver frissítés"
-      }
     }
   }
 }

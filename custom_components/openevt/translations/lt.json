@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Bendra energija"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Programinės įrangos atnaujinimas"
-      }
     }
   }
 }

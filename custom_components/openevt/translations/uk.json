@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Загальна енергія"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Оновлення прошивки"
-      }
     }
   }
 }

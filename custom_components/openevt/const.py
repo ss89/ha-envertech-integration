@@ -3,7 +3,7 @@
 from homeassistant.const import Platform
 
 DOMAIN = "openevt"
-PLATFORMS = [Platform.SENSOR, Platform.UPDATE]
+PLATFORMS = [Platform.SENSOR]
 DEFAULT_NAME = "OpenEVT"
 
 # Polling interval in seconds

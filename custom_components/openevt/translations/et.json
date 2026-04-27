@@ -89,11 +89,6 @@
       "total_energy_combined": {
         "name": "Koguenergia"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Firmware'i uuendus"
-      }
     }
   }
 }
