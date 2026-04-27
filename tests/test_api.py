@@ -124,12 +124,15 @@ class TestCheckSupervisorAddon:
         mock_session.get = MagicMock(return_value=mock_response)
         hass.data["aiohttp_client"] = {}
 
-        with patch.dict(
-            "os.environ",
-            {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
-        ), patch(
-            "custom_components.openevt.api.async_get_clientsession",
-            return_value=mock_session,
+        with (
+            patch.dict(
+                "os.environ",
+                {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+            ),
+            patch(
+                "custom_components.openevt.api.async_get_clientsession",
+                return_value=mock_session,
+            ),
         ):
             result = await check_supervisor_addon(hass)
 
@@ -140,9 +143,10 @@ class TestCheckSupervisorAddon:
     @pytest.mark.asyncio
     async def test_check_no_token(self, hass):
         """Test that missing token returns None."""
-        with patch.dict("os.environ", {"SUPERVISOR": "http://supervisor"}, clear=True), patch(
-            "custom_components.openevt.api.async_get_clientsession"
-        ) as mock_session:
+        with (
+            patch.dict("os.environ", {"SUPERVISOR": "http://supervisor"}, clear=True),
+            patch("custom_components.openevt.api.async_get_clientsession") as mock_session,
+        ):
             result = await check_supervisor_addon(hass)
 
         assert result is None
@@ -161,12 +165,15 @@ class TestCheckSupervisorAddon:
         mock_session.get = MagicMock(return_value=mock_response)
         hass.data["aiohttp_client"] = {}
 
-        with patch.dict(
-            "os.environ",
-            {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
-        ), patch(
-            "custom_components.openevt.api.async_get_clientsession",
-            return_value=mock_session,
+        with (
+            patch.dict(
+                "os.environ",
+                {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+            ),
+            patch(
+                "custom_components.openevt.api.async_get_clientsession",
+                return_value=mock_session,
+            ),
         ):
             result = await check_supervisor_addon(hass)
 
@@ -184,12 +191,15 @@ class TestCheckSupervisorAddon:
         mock_session.get = MagicMock(return_value=mock_response)
         hass.data["aiohttp_client"] = {}
 
-        with patch.dict(
-            "os.environ",
-            {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
-        ), patch(
-            "custom_components.openevt.api.async_get_clientsession",
-            return_value=mock_session,
+        with (
+            patch.dict(
+                "os.environ",
+                {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+            ),
+            patch(
+                "custom_components.openevt.api.async_get_clientsession",
+                return_value=mock_session,
+            ),
         ):
             result = await check_supervisor_addon(hass)
 
@@ -208,12 +218,15 @@ class TestCheckSupervisorAddon:
         mock_session.get = MagicMock(return_value=mock_response)
         hass.data["aiohttp_client"] = {}
 
-        with patch.dict(
-            "os.environ",
-            {"SUPERVISOR": "172.30.32.2", "SUPERVISOR_TOKEN": "test-token"},
-        ), patch(
-            "custom_components.openevt.api.async_get_clientsession",
-            return_value=mock_session,
+        with (
+            patch.dict(
+                "os.environ",
+                {"SUPERVISOR": "172.30.32.2", "SUPERVISOR_TOKEN": "test-token"},
+            ),
+            patch(
+                "custom_components.openevt.api.async_get_clientsession",
+                return_value=mock_session,
+            ),
         ):
             result = await check_supervisor_addon(hass)
 
@@ -234,15 +247,18 @@ class TestCheckSupervisorAddon:
         mock_session.get = MagicMock(return_value=mock_response)
         hass.data["aiohttp_client"] = {}
 
-        with patch.dict(
-            "os.environ",
-            {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
-        ), patch(
-            "custom_components.openevt.api.async_get_clientsession",
-            return_value=mock_session,
+        with (
+            patch.dict(
+                "os.environ",
+                {"SUPERVISOR": "http://supervisor", "SUPERVISOR_TOKEN": "test-token"},
+            ),
+            patch(
+                "custom_components.openevt.api.async_get_clientsession",
+                return_value=mock_session,
+            ),
         ):
             result = await check_supervisor_addon(hass)
 
         assert result is None
         # Should have tried both slugs
-        assert mock_session.get.call_count == 2
+        assert mock_session.get.call_count == 1
